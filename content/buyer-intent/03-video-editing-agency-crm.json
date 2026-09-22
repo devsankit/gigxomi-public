@@ -1,0 +1,72 @@
+{
+  "slug": "video-editing-agency-crm",
+  "title": "Video Editing Agency CRM: What It Must Track Before You Buy",
+  "byline": "Gigxomi Editorial",
+  "verifiedAt": "29 August 2026",
+  "publishAt": "2026-09-02T09:30:00+05:30",
+  "editorialStatus": "approved",
+  "excerpt": "Choose a video editing agency CRM that preserves enquiry context, qualification, project handoff, communication consent, revenue, and repeat-work opportunities.",
+  "focusKeyphrase": "video editing agency CRM",
+  "seoDescription": "Choose a video editing agency CRM that tracks enquiry context, qualification, project handoff, client communication, revenue, and repeat work.",
+  "introduction": "A video editing agency CRM is useful only when it improves the handoff between a buyer's first message and the production team that will deliver the work. A generic contact database can record names and deal stages, yet still force managers to copy briefs, promises, files, and deadlines into separate systems. The buying decision should focus on continuity, consent, accountability, and what the agency can learn from won and lost work.",
+  "shortAnswer": "Track the person, company, source, requested deliverable, volume, deadline, budget range, decision process, communication consent, next action, and loss reason. When a deal becomes active work, transfer the approved scope and conversation context without exposing private sales notes to editors. The best CRM for an editing agency is the one the team consistently updates and can connect to production—not the one with the longest automation list.",
+  "decisionHeading": "CRM fields and tests for an editing agency",
+  "decisionChecklist": [
+    "Does every enquiry have a source, owner, next action, and response deadline?",
+    "Can duplicate people and conversations be merged without losing history?",
+    "Are budget, volume, deliverable, deadline, and decision-maker fields structured?",
+    "Does production receive the approved promise rather than the salesperson's private notes?",
+    "Can opt-in, opt-out, and channel preferences be recorded and respected?",
+    "Can the agency report qualified pipeline and revenue by source?",
+    "Can records and attachments be exported if the agency changes systems?"
+  ],
+  "sections": [
+    {
+      "heading": "Capture buying context, not just contact details",
+      "paragraphs": [
+        "A name, phone number, and email do not explain whether an enquiry is valuable. Capture what the buyer produces, the requested format, monthly volume, source-footage condition, turnaround expectation, current workflow, budget range, and why the project matters now. Structured fields make opportunities comparable; free-text notes preserve nuance.",
+        "Keep the first message and acquisition source. A lead from a pricing article behaves differently from a referral or an ad click-to-WhatsApp conversation. Use source data to understand which pages and campaigns create qualified opportunities, but do not allow tracking parameters to overwrite the human explanation of what the buyer actually needs."
+      ]
+    },
+    {
+      "heading": "Define stages with entry and exit rules",
+      "paragraphs": [
+        "Stages such as new, qualified, proposal sent, won, and lost are too vague unless the team agrees on evidence. A qualified opportunity might require a confirmed deliverable, realistic deadline, budget alignment, and identified decision maker. Proposal sent should mean a versioned scope and commercial offer were delivered, not that a price was mentioned in chat.",
+        "Every open opportunity needs an owner and next action date. Automated reminders help, but they cannot repair ambiguous responsibility. Review stalled deals weekly and close them with a reason when appropriate. Clean loss data—price, timing, fit, trust, missing capability, no decision, or competitor—can improve both content and product decisions."
+      ]
+    },
+    {
+      "heading": "Preserve WhatsApp and Instagram conversation continuity",
+      "paragraphs": [
+        "Many editing clients begin with a direct message because it is faster than a form. If the agency copies only the phone number into a CRM, production loses the original examples, constraints, and urgency. A connected inbox should map the verified business recipient, client identity, channel, conversation, and agency owner without mixing WhatsApp and Instagram threads or guessing a tenant.",
+        "Access should follow the team role. Sales may see commercial qualification, a manager may see the approved scope, and an editor may see the production brief. Sensitive internal notes should not leak into customer replies. Test reply direction, attachments, reassignment, message history, and what happens when a connected channel is temporarily unavailable."
+      ]
+    },
+    {
+      "heading": "Make the won-deal handoff explicit",
+      "paragraphs": [
+        "Winning a deal should create a controlled handoff, not a celebration followed by manual reconstruction. Lock the approved deliverables, technical specifications, revision allowance, timeline, stakeholders, payment terms, and source assets. Assign a production owner who confirms that prerequisites are complete before the deadline starts.",
+        "Keep sales assumptions separate from production facts. If a salesperson offered a rush delivery or unusual format, the manager must acknowledge it. If scope changes after the handoff, record the change and commercial approval. This protects margins and prevents editors from absorbing undocumented promises."
+      ]
+    },
+    {
+      "heading": "Use reporting to choose content and follow-up",
+      "paragraphs": [
+        "A CRM should show more than lead count. Track first-response time, qualification rate, proposal rate, win rate, sales-cycle length, average initial value, repeat purchase, and loss reasons by source and service. Low traffic with high qualification can be more valuable than a large stream of generic enquiries.",
+        "Connect SEO reporting at the page and query level where privacy rules allow. If a guide attracts searches for pricing but produces no qualified conversations, improve its decision support and call to action. If a narrow article repeatedly creates good-fit leads, build adjacent content that answers the next questions those buyers ask."
+      ]
+    },
+    {
+      "heading": "Evaluate automation, consent, and portability",
+      "paragraphs": [
+        "Automation should reduce repetitive administration without creating unsolicited messages or incorrect promises. Require clear rules for assignment, acknowledgement, follow-up, and status changes. Keep a human approval step for proposals, sensitive replies, and commitments that affect delivery or price.",
+        "Before buying, verify role permissions, audit history, retention, deletion, exports, integration authentication, and how consent preferences are enforced. Gigxomi's connected inbox and agency workflow are designed to keep client conversations close to delivery, but the agency should verify current channel, CRM, and reporting behavior with its own account and policies."
+      ]
+    }
+  ],
+  "officialSources": [
+    { "label": "Gigxomi connected agency workspace", "url": "https://www.gigxomi.com/" },
+    { "label": "Gigxomi privacy policy", "url": "https://www.gigxomi.com/privacy-policy" },
+    { "label": "Meta WhatsApp Business Platform overview", "url": "https://developers.facebook.com/docs/whatsapp/cloud-api/overview" }
+  ]
+}

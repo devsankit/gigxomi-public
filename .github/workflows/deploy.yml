@@ -1,0 +1,642 @@
+name: Deploy Gigxomi
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      DEPLOY_HOST: ${{ vars.VPS_HOST || secrets.VPS_HOST }}
+      DEPLOY_HOST_CANDIDATES: ${{ vars.VPS_HOSTS || secrets.VPS_HOSTS || 'gigxomi.com 31.97.229.166' }}
+      DEPLOY_PORT: ${{ vars.VPS_SSH_PORT || secrets.VPS_SSH_PORT || '22' }}
+      DEPLOY_PORT_CANDIDATES: ${{ vars.VPS_SSH_PORTS || secrets.VPS_SSH_PORTS || '22 2222 65002' }}
+      DEPLOY_USER: ${{ vars.VPS_SSH_USER || secrets.VPS_SSH_USER || 'root' }}
+      META_APP_SECRET: ${{ secrets.META_APP_SECRET || secrets.FACEBOOK_APP_SECRET || secrets.GIGXOMI_META_APP_SECRET }}
+      FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET || secrets.META_APP_SECRET || secrets.GIGXOMI_META_APP_SECRET }}
+      GIGXOMI_META_APP_SECRET: ${{ secrets.GIGXOMI_META_APP_SECRET || secrets.META_APP_SECRET || secrets.FACEBOOK_APP_SECRET }}
+      META_WHATSAPP_APP_ID: ${{ vars.META_WHATSAPP_APP_ID || secrets.META_WHATSAPP_APP_ID || '948301758190635' }}
+      META_WHATSAPP_CONFIG_ID: ${{ vars.META_WHATSAPP_CONFIG_ID || secrets.META_WHATSAPP_CONFIG_ID || '1982640385723187' }}
+      GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID: ${{ vars.GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID || secrets.GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID }}
+      GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER: ${{ vars.GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER || secrets.GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER || '+919981807309' }}
+      GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID: ${{ vars.GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID || secrets.GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID }}
+      GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH: ${{ secrets.GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH }}
+      META_CAPI_DATASET_ID: ${{ vars.META_CAPI_DATASET_ID || secrets.META_CAPI_DATASET_ID || '1071501248618259' }}
+      META_CAPI_ACCESS_TOKEN: ${{ secrets.META_CAPI_ACCESS_TOKEN || secrets.META_CONVERSIONS_API_ACCESS_TOKEN }}
+      META_CAPI_GRAPH_VERSION: ${{ vars.META_CAPI_GRAPH_VERSION || secrets.META_CAPI_GRAPH_VERSION || 'v25.0' }}
+      META_CAPI_WHATSAPP_RECIPIENT: ${{ vars.META_CAPI_WHATSAPP_RECIPIENT || secrets.META_CAPI_WHATSAPP_RECIPIENT || '9993328124' }}
+      META_CAPI_WHATSAPP_PHONE_NUMBER_ID: ${{ vars.META_CAPI_WHATSAPP_PHONE_NUMBER_ID || secrets.META_CAPI_WHATSAPP_PHONE_NUMBER_ID }}
+      NEXT_PUBLIC_META_DATASET_ID: ${{ vars.NEXT_PUBLIC_META_DATASET_ID || secrets.NEXT_PUBLIC_META_DATASET_ID || '1071501248618259' }}
+      NEXT_PUBLIC_APP_URL: ${{ vars.NEXT_PUBLIC_APP_URL || secrets.NEXT_PUBLIC_APP_URL || 'https://www.gigxomi.com' }}
+      NODE_OPTIONS: --max-old-space-size=6144
+      NEXT_PUBLIC_FIREBASE_API_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_API_KEY || secrets.NEXT_PUBLIC_FIREBASE_API_KEY }}
+      NEXT_PUBLIC_FIREBASE_APP_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_APP_ID || secrets.NEXT_PUBLIC_FIREBASE_APP_ID }}
+      NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN: ${{ vars.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || secrets.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN }}
+      NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || secrets.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID }}
+      NEXT_PUBLIC_FIREBASE_PROJECT_ID: ${{ vars.NEXT_PUBLIC_FIREBASE_PROJECT_ID || secrets.NEXT_PUBLIC_FIREBASE_PROJECT_ID }}
+      NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET: ${{ vars.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || secrets.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET }}
+      NEXT_PUBLIC_FIREBASE_WEB_PUSH_VAPID_KEY: ${{ vars.NEXT_PUBLIC_FIREBASE_WEB_PUSH_VAPID_KEY || secrets.NEXT_PUBLIC_FIREBASE_WEB_PUSH_VAPID_KEY }}
+      DEPLOY_ARCHIVE_NAME: build-${{ github.sha }}.tar.gz
+      DEPLOY_COMMIT_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Enforce main branch scope
+        # This archive contains only the production web/API application.  A
+        # push can include companion Expo changes, but they are released by
+        # the mobile workflow and must not prevent an urgent server fix.
+        run: DEPLOY_WEB_ONLY=true node scripts/branch-policy-check.mjs --strict
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Protect messaging and editor assignment contracts
+        run: npm run test:application-stability
+
+      - name: Protect conversion privacy and attribution
+        run: node --test tests/meta-capi-attribution.test.mjs
+
+      - name: Protect public indexing and technical SEO
+        run: npm run test:seo
+
+      - name: Build
+        run: npm run build
+
+      - name: Create deployment archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' "${GITHUB_SHA}" > .deploy-commit
+          tar \
+            --exclude=build.tar.gz \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=.env \
+            --exclude=.env.local \
+            --exclude=.env.production \
+            --exclude=.env.production.local \
+            --exclude=.env.development.local \
+            --exclude=.next/cache \
+            -czf build.tar.gz \
+            .deploy-commit \
+            .next \
+            apps/whatsapp-ingress \
+            content \
+            public \
+            infra \
+            prisma \
+            prisma.config.ts \
+            scripts \
+            src \
+            wordpress \
+            eslint.config.mjs \
+            next.config.ts \
+            postcss.config.mjs \
+            proxy.ts \
+            tsconfig.json \
+            package.json \
+            package-lock.json
+
+      - name: Resolve deploy target
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${DEPLOY_HOST}" ] && [ -z "${DEPLOY_HOST_CANDIDATES}" ]; then
+            echo "ERROR: Missing deploy host. Set VPS_HOST or VPS_HOSTS in repository variables/secrets."
+            exit 1
+          fi
+          echo "Deploy host: ${DEPLOY_HOST}"
+          echo "Fallback deploy hosts: ${DEPLOY_HOST_CANDIDATES}"
+          echo "Deploy port: ${DEPLOY_PORT}"
+          echo "Fallback SSH ports: ${DEPLOY_PORT_CANDIDATES}"
+          echo "Deploy user: ${DEPLOY_USER}"
+          echo "DNS resolution for deploy host:"
+          getent ahosts "${DEPLOY_HOST}" || true
+
+      - name: Validate Meta deploy secret
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${META_APP_SECRET}" ]; then
+            echo "::error::META_APP_SECRET is not available to this GitHub Actions workflow. Add repository secret META_APP_SECRET, then run a new deploy."
+            exit 1
+          fi
+          echo "::add-mask::${META_APP_SECRET}"
+          echo "Meta app secret is available to the deploy workflow."
+
+      - name: Check SSH reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Checking SSH reachability for configured VPS target."
+          mapfile -t SSH_HOSTS < <(
+            printf "%s\n" "${DEPLOY_HOST}" ${DEPLOY_HOST_CANDIDATES} |
+              awk 'NF && !seen[$1]++ { print $1 }'
+          )
+          mapfile -t SSH_PORTS < <(
+            printf "%s\n" "${DEPLOY_PORT}" ${DEPLOY_PORT_CANDIDATES} |
+              awk 'NF && $1 ~ /^[0-9]+$/ && !seen[$1]++ { print $1 }'
+          )
+
+          if [ "${#SSH_HOSTS[@]}" -eq 0 ]; then
+            echo "::error::No valid SSH hosts were configured. Set VPS_HOST or VPS_HOSTS in repository Actions variables/secrets."
+            exit 1
+          fi
+
+          if [ "${#SSH_PORTS[@]}" -eq 0 ]; then
+            echo "::error::No valid SSH ports were configured. Set VPS_SSH_PORT or VPS_SSH_PORTS in repository Actions variables/secrets."
+            exit 1
+          fi
+
+          echo "Will probe SSH hosts: ${SSH_HOSTS[*]}"
+          echo "Will probe SSH ports: ${SSH_PORTS[*]}"
+          for attempt in 1 2; do
+            echo "SSH reachability round ${attempt}/2..."
+            for host in "${SSH_HOSTS[@]}"; do
+              for port in "${SSH_PORTS[@]}"; do
+                echo "Validating SSH handshake on ${host}:${port} over IPv4..."
+                KEYSCAN_FILE="$(mktemp)"
+                if timeout 8 ssh-keyscan -4 -T 5 -p "${port}" "${host}" > "${KEYSCAN_FILE}" 2>/dev/null && [ -s "${KEYSCAN_FILE}" ]; then
+                  echo "SSH service confirmed on ${host}:${port}."
+                  echo "DEPLOY_HOST=${host}" >> "${GITHUB_ENV}"
+                  echo "DEPLOY_PORT=${port}" >> "${GITHUB_ENV}"
+                  rm -f "${KEYSCAN_FILE}"
+                  exit 0
+                fi
+                rm -f "${KEYSCAN_FILE}"
+              done
+            done
+            if [ "${attempt}" -lt 2 ]; then
+              sleep 10
+            fi
+          done
+
+          echo "SSH diagnostics:"
+          for host in "${SSH_HOSTS[@]}"; do
+            getent ahosts "${host}" || true
+          done
+          echo "::error::GitHub Actions could not complete an SSH handshake on any configured host (${SSH_HOSTS[*]}) or port (${SSH_PORTS[*]}). Confirm sshd is running and the VPS firewall permits GitHub-hosted runners."
+          exit 1
+
+      - name: Validate VPS deploy credential
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          VPS_SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SSH_PRIVATE_KEY}" ] && [ -z "${VPS_SSH_PASSWORD}" ]; then
+            echo "::error::No VPS credential is configured. Add SSH_PRIVATE_KEY or VPS_SSH_PASSWORD in repository Actions secrets."
+            exit 1
+          fi
+          echo "VPS deploy credential is available. Authentication will be handled by the deployment action."
+
+      - name: Prepare VPS target
+        id: prepare_vps
+        continue-on-error: true
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          port: ${{ env.DEPLOY_PORT }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          protocol: tcp4
+          timeout: 300s
+          command_timeout: 10m
+          script: |
+            set -e
+            mkdir -p /var/www/gigxomi-app/.deploy-incoming
+            if ! command -v rsync >/dev/null 2>&1; then
+              apt-get update -qq
+              apt-get install -y -qq rsync
+            fi
+
+      - name: Retry prepare VPS target
+        if: steps.prepare_vps.outcome == 'failure'
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          port: ${{ env.DEPLOY_PORT }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          protocol: tcp4
+          timeout: 300s
+          command_timeout: 10m
+          script: |
+            set -e
+            mkdir -p /var/www/gigxomi-app/.deploy-incoming
+            if ! command -v rsync >/dev/null 2>&1; then
+              apt-get update -qq
+              apt-get install -y -qq rsync
+            fi
+
+      - name: Copy files to VPS
+        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_KEY_PASSPHRASE: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          VPS_SSH_PASSWORD: ${{ secrets.VPS_SSH_PASSWORD }}
+        run: |
+          set -euo pipefail
+          install -d -m 700 "${HOME}/.ssh"
+          ssh-keyscan -4 -T 10 -p "${DEPLOY_PORT}" "${DEPLOY_HOST}" > "${HOME}/.ssh/known_hosts"
+          chmod 600 "${HOME}/.ssh/known_hosts"
+
+          SSH_ARGS=(-4 -o BatchMode=yes -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -p "${DEPLOY_PORT}")
+          if [ -n "${SSH_PRIVATE_KEY}" ]; then
+            printf '%s\n' "${SSH_PRIVATE_KEY}" > "${HOME}/.ssh/gigxomi_deploy_key"
+            chmod 600 "${HOME}/.ssh/gigxomi_deploy_key"
+            SSH_ARGS+=(-i "${HOME}/.ssh/gigxomi_deploy_key")
+            if [ -n "${SSH_KEY_PASSPHRASE}" ]; then
+              sudo apt-get update -qq
+              sudo apt-get install -y -qq sshpass
+              export SSHPASS="${SSH_KEY_PASSPHRASE}"
+              SSH_ARGS=(-4 -o BatchMode=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -p "${DEPLOY_PORT}" -i "${HOME}/.ssh/gigxomi_deploy_key")
+              RSYNC_PREFIX=(sshpass -P "Enter passphrase for key" -e)
+            else
+              RSYNC_PREFIX=()
+            fi
+          else
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq sshpass
+            SSH_ARGS=(-4 -o BatchMode=no -o PreferredAuthentications=password -o PubkeyAuthentication=no -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4 -p "${DEPLOY_PORT}")
+            RSYNC_PREFIX=(sshpass -e)
+            export SSHPASS="${VPS_SSH_PASSWORD}"
+          fi
+
+          printf -v RSYNC_SSH_COMMAND 'ssh'
+          printf -v QUOTED_ARG ' %q' "${SSH_ARGS[@]}"
+          RSYNC_SSH_COMMAND+="${QUOTED_ARG}"
+          RSYNC_COMMAND=(
+            "${RSYNC_PREFIX[@]}"
+            rsync
+            --archive
+            --partial
+            --append-verify
+            --timeout=120
+            --info=progress2,stats2
+            -e "${RSYNC_SSH_COMMAND}"
+            build.tar.gz
+            "${DEPLOY_USER}@${DEPLOY_HOST}:/var/www/gigxomi-app/.deploy-incoming/${DEPLOY_ARCHIVE_NAME}"
+          )
+
+          for attempt in 1 2 3; do
+            echo "Resumable deployment archive transfer attempt ${attempt}/3..."
+            if timeout 12m "${RSYNC_COMMAND[@]}"; then
+              echo "Deployment archive copied successfully."
+              exit 0
+            fi
+            if [ "${attempt}" -lt 3 ]; then
+              sleep 10
+            fi
+          done
+          echo "::error::Deployment archive transfer failed after three resumable attempts."
+          exit 1
+
+      - name: Deploy on VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          port: ${{ env.DEPLOY_PORT }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          protocol: tcp4
+          timeout: 300s
+          command_timeout: 20m
+          envs: META_APP_SECRET,FACEBOOK_APP_SECRET,GIGXOMI_META_APP_SECRET,META_WHATSAPP_APP_ID,META_WHATSAPP_CONFIG_ID,GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID,GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER,GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID,GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH,META_CAPI_DATASET_ID,META_CAPI_ACCESS_TOKEN,META_CAPI_GRAPH_VERSION,META_CAPI_WHATSAPP_RECIPIENT,META_CAPI_WHATSAPP_PHONE_NUMBER_ID,NEXT_PUBLIC_META_DATASET_ID,NEXT_PUBLIC_APP_URL,DEPLOY_ARCHIVE_NAME,DEPLOY_COMMIT_SHA
+          script: |
+            set -e
+            cd /var/www/gigxomi-app
+            mkdir -p /var/www/gigxomi-app/.deploy-incoming
+            mkdir -p /var/www/gigxomi-app/backups/source
+            SOURCE_BACKUP="/var/www/gigxomi-app/backups/source/pre-deploy-source-$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
+            SOURCE_BACKUP_INPUTS=""
+            for SOURCE_PATH in content src scripts infra prisma wordpress package.json package-lock.json next.config.ts postcss.config.mjs proxy.ts tsconfig.json; do
+              if [ -e "${SOURCE_PATH}" ]; then
+                SOURCE_BACKUP_INPUTS="${SOURCE_BACKUP_INPUTS} ${SOURCE_PATH}"
+              fi
+            done
+            if [ -n "${SOURCE_BACKUP_INPUTS}" ]; then
+              # shellcheck disable=SC2086
+              tar -czf "${SOURCE_BACKUP}" ${SOURCE_BACKUP_INPUTS}
+              test -s "${SOURCE_BACKUP}" || { echo "ERROR: Source backup is empty; refusing to replace deployed source."; exit 1; }
+              echo "Source backup created before deploy: ${SOURCE_BACKUP}"
+              find /var/www/gigxomi-app/backups/source -type f -name 'pre-deploy-source-*.tar.gz' -mtime +30 -delete
+            fi
+            ARCHIVE_PATH="/var/www/gigxomi-app/.deploy-incoming/${DEPLOY_ARCHIVE_NAME}"
+            test -s "${ARCHIVE_PATH}" || { echo "ERROR: Expected deployment archive is missing: ${DEPLOY_ARCHIVE_NAME}"; exit 1; }
+            # Keep the currently running Next.js process away from the incoming
+            # build. Extracting directly over .next lets an old process write
+            # stale ISR artifacts into the new release before PM2 restarts.
+            NEXT_RELEASE_DIR="$(mktemp -d /var/www/gigxomi-app/.next-release.XXXXXX)"
+            tar -xzf "${ARCHIVE_PATH}" -C "${NEXT_RELEASE_DIR}" --strip-components=1 .next
+            tar -xzf "${ARCHIVE_PATH}" --exclude='.next' --exclude='.next/*'
+            rm -f "${ARCHIVE_PATH}"
+            test -s "${NEXT_RELEASE_DIR}/BUILD_ID" || { echo "ERROR: Staged Next production build is missing after deploy extraction."; ls -la "${NEXT_RELEASE_DIR}" || true; exit 1; }
+            test -s .deploy-commit || { echo "ERROR: Deployment commit marker is missing after extraction."; exit 1; }
+            test "$(cat .deploy-commit)" = "${DEPLOY_COMMIT_SHA}" || { echo "ERROR: Deployment archive commit does not match this workflow run."; exit 1; }
+            test -s src/app/page.tsx || { echo "ERROR: Canonical application source is missing after extraction."; exit 1; }
+            test -s wordpress/gigxomi-headless/functions.php || { echo "ERROR: WordPress headless theme is missing after extraction."; exit 1; }
+            test -s infra/nginx/blog.gigxomi.com.conf || { echo "ERROR: WordPress Nginx configuration is missing after extraction."; exit 1; }
+            test -s infra/nginx/www.gigxomi.com.conf || { echo "ERROR: Canonical-site Nginx configuration is missing after extraction."; exit 1; }
+            test -s apps/whatsapp-ingress/server.mjs || { echo "ERROR: Dedicated WhatsApp ingress source is missing after extraction."; exit 1; }
+            if grep -q 'ankit\.gigxomi\.com' infra/nginx/www.gigxomi.com.conf; then
+              echo "ERROR: Canonical-site Nginx configuration must not redirect public routes to ankit.gigxomi.com."
+              exit 1
+            fi
+            echo "Deploying canonical source and build for commit: $(cat .deploy-commit)"
+
+            # WhatsApp ingress is intentionally independent from the Next.js
+            # PM2 process. Main app deployments may install it once, but never
+            # restart a healthy running ingress. This keeps signed Meta events
+            # durably queued while the application is replaced or restarted.
+            WHATSAPP_INGRESS_DIR="/var/www/gigxomi-whatsapp-ingress"
+            WHATSAPP_INGRESS_TARGET="${WHATSAPP_INGRESS_DIR}/server.mjs"
+            read -r WHATSAPP_INGRESS_SOURCE_HASH _ < <(sha256sum apps/whatsapp-ingress/server.mjs)
+            if pm2 describe gigxomi-whatsapp-ingress >/dev/null 2>&1; then
+              test -s "${WHATSAPP_INGRESS_TARGET}" || { echo "ERROR: Running WhatsApp ingress has no durable source file."; exit 1; }
+              read -r WHATSAPP_INGRESS_TARGET_HASH _ < <(sha256sum "${WHATSAPP_INGRESS_TARGET}")
+              if [ "${WHATSAPP_INGRESS_SOURCE_HASH}" != "${WHATSAPP_INGRESS_TARGET_HASH}" ]; then
+                install -o root -g root -m 0640 apps/whatsapp-ingress/server.mjs "${WHATSAPP_INGRESS_TARGET}"
+                pm2 restart gigxomi-whatsapp-ingress --update-env
+                pm2 save
+                echo "Dedicated WhatsApp ingress source changed; restarted only the ingress process."
+              else
+                echo "Dedicated WhatsApp ingress is unchanged; preserving its independent process."
+              fi
+            else
+              install -d -o root -g root -m 0750 "${WHATSAPP_INGRESS_DIR}"
+              install -o root -g root -m 0640 apps/whatsapp-ingress/server.mjs "${WHATSAPP_INGRESS_TARGET}"
+              install -d -o root -g root -m 0700 /var/lib/gigxomi/whatsapp-ingress
+              pm2 start "${WHATSAPP_INGRESS_TARGET}" --name gigxomi-whatsapp-ingress
+              pm2 save
+            fi
+            for ATTEMPT in 1 2 3 4 5; do
+              if curl --fail --silent --show-error http://127.0.0.1:3001/healthz >/dev/null; then
+                break
+              fi
+              if [ "${ATTEMPT}" -eq 5 ]; then
+                echo "ERROR: Dedicated WhatsApp ingress is not healthy; refusing to route Meta webhooks to it."
+                exit 1
+              fi
+              sleep 1
+            done
+
+            php -l wordpress/gigxomi-headless/functions.php
+            php -l wordpress/gigxomi-headless/index.php
+            WORDPRESS_THEME_TARGET="/var/www/blog/wp-content/themes/gigxomi-headless"
+            test -d "${WORDPRESS_THEME_TARGET}" || { echo "ERROR: WordPress theme target is missing: ${WORDPRESS_THEME_TARGET}"; exit 1; }
+            mkdir -p /var/backups/gigxomi-wordpress-theme
+            WORDPRESS_THEME_BACKUP="/var/backups/gigxomi-wordpress-theme/gigxomi-headless-pre-deploy-$(date -u +%Y%m%dT%H%M%SZ).tar.gz"
+            tar -czf "${WORDPRESS_THEME_BACKUP}" -C "$(dirname "${WORDPRESS_THEME_TARGET}")" "$(basename "${WORDPRESS_THEME_TARGET}")"
+            test -s "${WORDPRESS_THEME_BACKUP}" || { echo "ERROR: WordPress theme backup is empty; refusing to update the theme."; exit 1; }
+            install -o www-data -g www-data -m 0644 wordpress/gigxomi-headless/functions.php "${WORDPRESS_THEME_TARGET}/functions.php"
+            install -o www-data -g www-data -m 0644 wordpress/gigxomi-headless/index.php "${WORDPRESS_THEME_TARGET}/index.php"
+            install -o www-data -g www-data -m 0644 wordpress/gigxomi-headless/style.css "${WORDPRESS_THEME_TARGET}/style.css"
+            find /var/backups/gigxomi-wordpress-theme -type f -name 'gigxomi-headless-pre-deploy-*.tar.gz' -mtime +30 -delete
+
+            NGINX_BLOG_TARGET="/etc/nginx/sites-available/blog.gigxomi.com"
+            NGINX_WWW_TARGET="/etc/nginx/sites-available/gigxomi"
+            test -s "${NGINX_BLOG_TARGET}" || { echo "ERROR: WordPress Nginx site configuration is missing: ${NGINX_BLOG_TARGET}"; exit 1; }
+            test -s "${NGINX_WWW_TARGET}" || { echo "ERROR: Canonical-site Nginx configuration is missing: ${NGINX_WWW_TARGET}"; exit 1; }
+            mkdir -p /var/backups/gigxomi-nginx
+            NGINX_BACKUP_SUFFIX="$(date -u +%Y%m%dT%H%M%SZ)"
+            NGINX_BLOG_BACKUP="/var/backups/gigxomi-nginx/blog.gigxomi.com-pre-deploy-${NGINX_BACKUP_SUFFIX}.conf"
+            NGINX_WWW_BACKUP="/var/backups/gigxomi-nginx/www.gigxomi.com-pre-deploy-${NGINX_BACKUP_SUFFIX}.conf"
+            install -m 0600 "${NGINX_BLOG_TARGET}" "${NGINX_BLOG_BACKUP}"
+            install -m 0600 "${NGINX_WWW_TARGET}" "${NGINX_WWW_BACKUP}"
+            install -o root -g root -m 0644 infra/nginx/blog.gigxomi.com.conf "${NGINX_BLOG_TARGET}"
+            install -o root -g root -m 0644 infra/nginx/www.gigxomi.com.conf "${NGINX_WWW_TARGET}"
+            if ! nginx -t; then
+              install -o root -g root -m 0644 "${NGINX_BLOG_BACKUP}" "${NGINX_BLOG_TARGET}"
+              install -o root -g root -m 0644 "${NGINX_WWW_BACKUP}" "${NGINX_WWW_TARGET}"
+              nginx -t
+              echo "ERROR: New Nginx configuration was invalid and has been rolled back."
+              exit 1
+            fi
+            systemctl reload nginx
+            find /var/backups/gigxomi-nginx -type f -name '*gigxomi.com-pre-deploy-*.conf' -mtime +30 -delete
+
+            npm ci
+            export NODE_OPTIONS=--max-old-space-size=6144
+            touch .env
+            set_env_value() {
+              KEY="$1"
+              VALUE="$2"
+              if [ -z "${VALUE}" ]; then
+                return 0
+              fi
+              node - "${KEY}" "${VALUE}" <<'NODE'
+            const fs = require('fs');
+            const [key, value] = process.argv.slice(2);
+            const envPath = '.env';
+            const lines = fs.existsSync(envPath) ? fs.readFileSync(envPath, 'utf8').split(/\r?\n/) : [];
+            let found = false;
+            const next = lines.map((line) => {
+              if (line.startsWith(`${key}=`)) {
+                found = true;
+                return `${key}=${value}`;
+              }
+              return line;
+            });
+            if (!found) next.push(`${key}=${value}`);
+            fs.writeFileSync(envPath, next.filter((line, index, array) => line || index < array.length - 1).join('\n') + '\n');
+            NODE
+            }
+            META_SECRET_VALUE="${META_APP_SECRET:-}"
+            if [ -z "${META_SECRET_VALUE}" ]; then META_SECRET_VALUE="${FACEBOOK_APP_SECRET:-}"; fi
+            if [ -z "${META_SECRET_VALUE}" ]; then META_SECRET_VALUE="${GIGXOMI_META_APP_SECRET:-}"; fi
+            set_env_value META_APP_SECRET "${META_SECRET_VALUE}"
+            set_env_value FACEBOOK_APP_SECRET "${META_SECRET_VALUE}"
+            set_env_value GIGXOMI_META_APP_SECRET "${META_SECRET_VALUE}"
+            set_env_value META_WHATSAPP_APP_ID "${META_WHATSAPP_APP_ID:-}"
+            set_env_value META_WHATSAPP_CONFIG_ID "${META_WHATSAPP_CONFIG_ID:-}"
+            set_env_value GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID "${GIGXOMI_PUBLIC_AUTH_WHATSAPP_TENANT_ID:-}"
+            set_env_value GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER "${GIGXOMI_PUBLIC_AUTH_WHATSAPP_NUMBER:-}"
+            set_env_value GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID "${GIGXOMI_PUBLIC_AUTH_WHATSAPP_PHONE_NUMBER_ID:-}"
+            if [ -n "${GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH:-}" ]; then
+              set_env_value GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH "${GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH}"
+            fi
+            set_env_value NEXT_PUBLIC_APP_URL "${NEXT_PUBLIC_APP_URL:-}"
+            set_env_value META_CAPI_DATASET_ID "${META_CAPI_DATASET_ID:-}"
+            set_env_value META_CAPI_ACCESS_TOKEN "${META_CAPI_ACCESS_TOKEN:-}"
+            set_env_value META_CAPI_GRAPH_VERSION "${META_CAPI_GRAPH_VERSION:-}"
+            set_env_value META_CAPI_WHATSAPP_RECIPIENT "${META_CAPI_WHATSAPP_RECIPIENT:-}"
+            set_env_value META_CAPI_WHATSAPP_PHONE_NUMBER_ID "${META_CAPI_WHATSAPP_PHONE_NUMBER_ID:-}"
+            set_env_value NEXT_PUBLIC_META_DATASET_ID "${NEXT_PUBLIC_META_DATASET_ID:-}"
+            chmod 600 .env || true
+            FIXED_OTP_HASH_RUNTIME_VALUE="$(node -e 'const fs=require("fs");const dotenv=require("dotenv");const parsed=dotenv.parse(fs.readFileSync(".env","utf8"));process.stdout.write(String(parsed.GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH||"").trim().toLowerCase())')"
+            if ! printf '%s' "${FIXED_OTP_HASH_RUNTIME_VALUE}" | grep -Eq '^[a-f0-9]{64}$'; then
+              echo "ERROR: GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH is missing or invalid in the VPS environment. Protected agency OTP would fail."
+              exit 1
+            fi
+            export GIGXOMI_POST_PRODUCTION_FIXED_OTP_HASH="${FIXED_OTP_HASH_RUNTIME_VALUE}"
+            echo "Protected agency OTP hash is configured for the runtime process."
+            node -r dotenv/config -e "const raw=process.env.DATABASE_URL; if (!raw) { console.error('ERROR: DATABASE_URL is not configured on the VPS. Set it in /var/www/gigxomi-app/.env before deploying.'); process.exit(1); } const url=new URL(raw); console.log('Deploy database host:', url.hostname + ':' + (url.port || '5432')); if (url.hostname.includes('supabase.com')) { console.error('ERROR: DATABASE_URL still points to Supabase. Update /var/www/gigxomi-app/.env to the server PostgreSQL URL before deploying.'); process.exit(1); }"
+            node -r dotenv/config -e "const secret=process.env.META_APP_SECRET||process.env.FACEBOOK_APP_SECRET||process.env.GIGXOMI_META_APP_SECRET; if (!secret) { console.error('ERROR: META_APP_SECRET is not configured on the VPS. Add the Meta app secret to /var/www/gigxomi-app/.env before deploying WhatsApp Embedded Signup.'); process.exit(1); } console.log('Meta app secret is configured for runtime token exchange.');"
+            mkdir -p /var/www/gigxomi-app/backups
+            BACKUP_SQL_FILE="/var/www/gigxomi-app/backups/pre-migrate-$(date -u +%Y%m%dT%H%M%SZ).sql"
+            BACKUP_FILE="${BACKUP_SQL_FILE}.gz"
+            DATABASE_URL_VALUE="$(node -r dotenv/config -e 'const url = new URL(process.env.DATABASE_URL || ""); url.searchParams.delete("schema"); process.stdout.write(url.toString())')"
+            pg_dump --file="${BACKUP_SQL_FILE}" "${DATABASE_URL_VALUE}"
+            test -s "${BACKUP_SQL_FILE}" || { echo "ERROR: Database backup is empty; refusing to run migrations."; exit 1; }
+            gzip "${BACKUP_SQL_FILE}"
+            test -s "${BACKUP_FILE}" || { echo "ERROR: Compressed database backup is empty; refusing to run migrations."; exit 1; }
+            find /var/www/gigxomi-app/backups -type f -name 'pre-migrate-*.sql.gz' -mtime +30 -delete
+            echo "Database backup created before migration: ${BACKUP_FILE}"
+            MIGRATION_STATUS_FILE="$(mktemp)"
+            if npx prisma migrate status > "${MIGRATION_STATUS_FILE}" 2>&1; then
+              cat "${MIGRATION_STATUS_FILE}"
+            else
+              cat "${MIGRATION_STATUS_FILE}"
+              RECOVERED_FAILED_MIGRATION=0
+              for KNOWN_FAILED_MIGRATION in \
+                "20260506103000_add_whatsapp_flow_runtime_tables" \
+                "20260508180000_add_device_push_tokens" \
+                "20260622193000_reset_agency_identity_isolation" \
+                "20260816120000_connected_platform_foundation"
+              do
+                if grep -q "${KNOWN_FAILED_MIGRATION}" "${MIGRATION_STATUS_FILE}" && grep -qi "failed" "${MIGRATION_STATUS_FILE}"; then
+                  echo "Recovering known failed migration state before deploy: ${KNOWN_FAILED_MIGRATION}"
+                  npx prisma migrate resolve --rolled-back "${KNOWN_FAILED_MIGRATION}"
+                  RECOVERED_FAILED_MIGRATION=1
+                fi
+              done
+              if [ "${RECOVERED_FAILED_MIGRATION}" -eq 1 ]; then
+                echo "Known failed migration state recovered; continuing to prisma migrate deploy..."
+              elif grep -qi "not yet been applied" "${MIGRATION_STATUS_FILE}"; then
+                echo "Pending Prisma migrations detected; continuing to prisma migrate deploy..."
+              else
+                rm -f "${MIGRATION_STATUS_FILE}"
+                exit 1
+              fi
+            fi
+            rm -f "${MIGRATION_STATUS_FILE}"
+            npm run db:migrate:deploy
+            npm run db:verify
+            if ! npm run wordpress:migrate -- --apply; then
+              echo "WARNING: WordPress marketplace sync failed; continuing application deployment because database migration and verification passed."
+            fi
+            set -a
+            . ./.env
+            set +a
+            if ! npm run wordpress:schedule -- --apply; then
+              echo "WARNING: WordPress editorial scheduling failed; continuing application deployment because the application and database are healthy."
+            fi
+            if ! npm run wordpress:yoast -- --apply --wordpress-root=/var/www/blog; then
+              echo "WARNING: WordPress Yoast editorial metadata sync failed; continuing application deployment because the application and database are healthy."
+            fi
+            # Next's runtime-only authentication secrets must be present in the
+            # PM2 process environment. The production .env is intentionally not
+            # part of the deployment archive, so export it immediately before
+            # starting the process instead of relying on build-time loading.
+            set -a
+            . ./.env
+            set +a
+            pm2 delete gigxomi || true
+            NEXT_PREVIOUS_DIR="$(mktemp -d /var/www/gigxomi-app/.next-previous.XXXXXX)"
+            rmdir "${NEXT_PREVIOUS_DIR}"
+            if [ -d .next ]; then mv .next "${NEXT_PREVIOUS_DIR}"; fi
+            mv "${NEXT_RELEASE_DIR}" .next
+            if ! pm2 start npm --name gigxomi --cwd /var/www/gigxomi-app -- start; then
+              rm -rf .next
+              if [ -d "${NEXT_PREVIOUS_DIR}" ]; then mv "${NEXT_PREVIOUS_DIR}" .next; fi
+              pm2 start npm --name gigxomi --cwd /var/www/gigxomi-app -- start
+              echo "ERROR: New Next.js process failed to start; the previous build was restored."
+              exit 1
+            fi
+            rm -rf "${NEXT_PREVIOUS_DIR}"
+            pm2 save
+            node -r dotenv/config scripts/configure-meta-js-sdk-domains.mjs
+            # Public indexing runs separately from request handling and messaging.
+            install -m 644 infra/systemd/gigxomi-indexnow.service /etc/systemd/system/gigxomi-indexnow.service
+            install -m 644 infra/systemd/gigxomi-indexnow.timer /etc/systemd/system/gigxomi-indexnow.timer
+            install -d -m 700 /var/www/gigxomi-app/.gigxomi
+            systemctl daemon-reload
+            systemctl enable --now gigxomi-indexnow.timer
+            # Independent worker. Missing credentials leave measurement disabled.
+            if node -r dotenv/config -e 'process.exit(process.env.CRON_SECRET && (process.env.META_CAPI_ACCESS_TOKEN || process.env.META_CAPI_WHATSAPP_ACCESS_TOKEN) ? 0 : 1)'; then
+              if pm2 describe gigxomi-meta-conversions >/dev/null 2>&1; then
+                pm2 restart gigxomi-meta-conversions --update-env
+              else
+                pm2 start scripts/meta-conversions-worker.mjs --name gigxomi-meta-conversions --cwd /var/www/gigxomi-app
+              fi
+              pm2 save
+            fi
+            node -r dotenv/config scripts/reconcile-public-whatsapp-otp.mjs
+            node -r dotenv/config scripts/subscribe-public-whatsapp-webhook.mjs
+            node -r dotenv/config scripts/configure-public-whatsapp-callback.mjs
+            node -r dotenv/config scripts/diagnose-public-whatsapp-webhook-config.mjs
+            # A privacy-safe, one-hour trace confirms that inbound Meta events
+            # are being assigned to the same tenant used by the agency inbox.
+            # It deliberately excludes message bodies, phone IDs, tokens and OTPs.
+            node -r dotenv/config scripts/diagnose-whatsapp-inbox.mjs
+            # Log readiness only. Never print phone IDs, access tokens, OTPs,
+            # contact numbers, or any other customer data in Actions output.
+            node <<'NODE'
+            const fs = require('fs');
+            const path = require('path');
+            const root = '/var/www/gigxomi-app/.gigxomi';
+            const readJson = (name, fallback) => {
+              try { return JSON.parse(fs.readFileSync(path.join(root, name), 'utf8')); } catch { return fallback; }
+            };
+            const platform = readJson('local-platform-store.json', {});
+            const auth = readJson('public-auth-intents.json', { intents: [] });
+            const line = Array.isArray(platform.whatsappStates)
+              ? platform.whatsappStates
+                  .filter((state) => state && String(state.phoneNumber || '').replace(/\D/g, '').endsWith('9981807309'))
+                  .sort((left, right) => Number(Boolean(String(right.phoneNumberId || '').trim())) - Number(Boolean(String(left.phoneNumberId || '').trim())))[0] || null
+              : null;
+            const intents = Array.isArray(auth.intents) ? auth.intents : [];
+            const count = (status) => intents.filter((intent) => intent && intent.status === status).length;
+            console.log('Public WhatsApp OTP readiness:', JSON.stringify({
+              connectionRecord: Boolean(line),
+              officialNumberConfigured: Boolean(String(line?.phoneNumber || '').replace(/\D/g, '').endsWith('9981807309')),
+              pluginEnabled: Boolean(line?.pluginEnabled),
+              hasPhoneNumberId: Boolean(String(line?.phoneNumberId || '').trim()),
+              hasAccessToken: Boolean(String(line?.accessToken || '').trim()),
+              status: String(line?.status || 'not-configured'),
+              hasConnectionError: Boolean(String(line?.lastError || '').trim()),
+              hasInboundWebhook: Boolean(String(line?.lastInboundAt || '').trim()),
+              hasOutboundWhatsApp: Boolean(String(line?.lastOutboundAt || '').trim()),
+            }));
+            console.log('Public OTP intent readiness:', JSON.stringify({
+              storePresent: fs.existsSync(path.join(root, 'public-auth-intents.json')),
+              pendingWhatsApp: count('PENDING_WHATSAPP'),
+              otpIssued: count('OTP_ISSUED'),
+              verified: count('VERIFIED'),
+            }));
+            NODE
+
+      - name: Verify public SEO and links
+        env:
+          SEO_BASE_URL: https://www.gigxomi.com
+          SEO_WORDPRESS_URL: https://blog.gigxomi.com
+        run: npm run seo:audit

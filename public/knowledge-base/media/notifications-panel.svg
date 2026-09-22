@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-label="Gigxomi notifications panel preview">
+  <rect width="1200" height="760" fill="#08090c"/><rect x="254" y="62" width="692" height="636" rx="30" fill="#0d1117" stroke="#fff" stroke-opacity=".08"/>
+  <text x="308" y="124" fill="#f8fafc" font-family="Inter,Arial" font-size="32" font-weight="800">Notifications</text><text x="308" y="154" fill="#94a3b8" font-family="Inter,Arial" font-size="15">Real-time updates for work, chats, approvals, and payments.</text>
+  <g font-family="Inter,Arial">
+    <rect x="308" y="204" width="584" height="82" rx="20" fill="#d1ff32" opacity=".12" stroke="#d1ff32" stroke-opacity=".22"/><circle cx="348" cy="245" r="12" fill="#d1ff32"/><text x="382" y="238" fill="#f8fafc" font-size="17" font-weight="800">New matching work</text><text x="382" y="262" fill="#cbd5e1" font-size="13">Wedding highlight editor needed · 92% match</text>
+    <rect x="308" y="310" width="584" height="82" rx="20" fill="#121922" stroke="#fff" stroke-opacity=".08"/><circle cx="348" cy="351" r="12" fill="#d1ff32"/><text x="382" y="344" fill="#f8fafc" font-size="17" font-weight="800">Application accepted</text><text x="382" y="368" fill="#94a3b8" font-size="13">Agency opened project chat after approval</text>
+    <rect x="308" y="416" width="584" height="82" rx="20" fill="#121922" stroke="#fff" stroke-opacity=".08"/><circle cx="348" cy="457" r="12" fill="#44515f"/><text x="382" y="450" fill="#f8fafc" font-size="17" font-weight="800">Payment request created</text><text x="382" y="474" fill="#94a3b8" font-size="13">INR 8,500 · proof requested in chat</text>
+    <rect x="308" y="522" width="584" height="82" rx="20" fill="#121922" stroke="#fff" stroke-opacity=".08"/><circle cx="348" cy="563" r="12" fill="#44515f"/><text x="382" y="556" fill="#f8fafc" font-size="17" font-weight="800">Delivery review updated</text><text x="382" y="580" fill="#94a3b8" font-size="13">Manager added internal note and next action</text>
+  </g>
+</svg>

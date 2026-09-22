@@ -1,0 +1,56 @@
+name: Migrate WordPress Marketplace
+
+on:
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout migration source
+        uses: actions/checkout@v6
+
+      - name: Upload migration script
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ vars.VPS_HOST || secrets.VPS_HOST || 'gigxomi.com' }}
+          port: ${{ vars.VPS_SSH_PORT || secrets.VPS_SSH_PORT || '22' }}
+          username: ${{ vars.VPS_SSH_USER || secrets.VPS_SSH_USER || 'root' }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          protocol: tcp4
+          source: scripts/migrate-wordpress-marketplace.js
+          target: /var/www/gigxomi-app
+          overwrite: true
+
+      - name: Back up and migrate WordPress marketplace data
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.VPS_HOST || secrets.VPS_HOST || 'gigxomi.com' }}
+          port: ${{ vars.VPS_SSH_PORT || secrets.VPS_SSH_PORT || '22' }}
+          username: ${{ vars.VPS_SSH_USER || secrets.VPS_SSH_USER || 'root' }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          protocol: tcp4
+          timeout: 300s
+          command_timeout: 15m
+          script: |
+            set -e
+            cd /var/www/gigxomi-app
+            node --check scripts/migrate-wordpress-marketplace.js
+            npm ci
+            node -r dotenv/config -e "if (!process.env.DATABASE_URL) { console.error('ERROR: DATABASE_URL is not configured.'); process.exit(1); }"
+            mkdir -p backups
+            BACKUP_SQL_FILE="backups/pre-wordpress-import-$(date -u +%Y%m%dT%H%M%SZ).sql"
+            DATABASE_URL_VALUE="$(node -r dotenv/config -e 'const url = new URL(process.env.DATABASE_URL || ""); url.searchParams.delete("schema"); process.stdout.write(url.toString())')"
+            pg_dump --file="${BACKUP_SQL_FILE}" "${DATABASE_URL_VALUE}"
+            test -s "${BACKUP_SQL_FILE}" || { echo "ERROR: Database backup is empty; refusing to import."; exit 1; }
+            gzip "${BACKUP_SQL_FILE}"
+            echo "Database backup created: ${BACKUP_SQL_FILE}.gz"
+            node -r dotenv/config scripts/migrate-wordpress-marketplace.js --apply
+            npm run db:verify
+            pm2 restart gigxomi --update-env
+            pm2 save

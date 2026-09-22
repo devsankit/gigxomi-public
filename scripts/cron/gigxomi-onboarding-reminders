@@ -1,0 +1,3 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+15 * * * * root /bin/sh /var/www/gigxomi-app/scripts/run-connected-onboarding-reminders.sh

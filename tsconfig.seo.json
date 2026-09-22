@@ -1,0 +1,31 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "noEmit": true,
+    "tsBuildInfoFile": null
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.ts",
+    "scripts/verify-growth-pillar-content.ts",
+    "src/app/blog/[slug]/page.tsx",
+    "src/app/blog/editorial-methodology/page.tsx",
+    "src/app/blog/page.tsx",
+    "src/app/blog/video-editing-project-management-tools/page.tsx",
+    "src/components/public/marketing-site-footer.tsx",
+    "src/components/public/public-site-footer.tsx",
+    "src/lib/seo/blog-posts.ts",
+    "src/lib/seo/company-knowledge-base.ts",
+    "src/lib/seo/growth-pillar-posts.ts",
+    "src/lib/seo/public-support-contact.ts",
+    "src/lib/seo/retired-blog-redirects.ts"
+  ],
+  "exclude": [
+    ".next*",
+    "homepage-glass-header",
+    "mobile-app",
+    "node_modules",
+    "tmp"
+  ]
+}

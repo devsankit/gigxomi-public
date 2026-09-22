@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/freelancer-trust-campaign",
+      "schedule": "30 4 * * *"
+    }
+  ]
+}

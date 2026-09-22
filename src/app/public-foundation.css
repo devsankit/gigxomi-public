@@ -1,0 +1,296 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Geist:wght@400;500;600;700&display=swap");
+@import "../styles/design-tokens.css";
+@import "../styles/gigxomi-design-system.css";
+
+:root {
+  --gx-font-display: var(--font-space-grotesk), "Space Grotesk", sans-serif;
+  --gx-font-body: var(--font-geist-sans), "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+.public-page,
+.gx-marketing-site,
+.gx-unified-public-chrome {
+  margin: 0;
+  color: var(--color-text-primary);
+  background: #070806;
+  font-family: var(--font-geist-sans), var(--gx-font-body), "Segoe UI", sans-serif;
+  font-size: var(--text-base);
+  line-height: var(--line-height-normal);
+}
+
+.public-page main,
+.gx-unified-public-content {
+  background: transparent;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.gx-hero-heading,
+.gx-chapter-heading,
+.gx-auth-heading,
+.gx-display-xl,
+.gx-display-lg,
+.gx-heading-md,
+.gx-hero-title,
+.heading,
+[class*="heading"],
+[class*="Heading"],
+[class*="heroTitle"],
+[class*="sectionTitle"] {
+  margin: 0;
+  font-family: var(--font-space-grotesk), var(--gx-font-display, "Space Grotesk", sans-serif) !important;
+  letter-spacing: -0.03em;
+}
+
+p {
+  margin: 0;
+  font-family: var(--font-geist-sans), var(--gx-font-body, sans-serif);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  color: inherit;
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+}
+
+/* =========================================================================
+   CENTRAL THEME BUTTON SYSTEM — Reusable Everywhere
+   Guarantees:
+   - Primary buttons: Lime background with STRICTLY dark ink (#070806), bold typography,
+     and all child elements/icons forced to dark ink. Never white text on neon!
+   - Secondary buttons: Dark frosted surface, hairline border, light text.
+   ========================================================================= */
+
+.gx-button-primary,
+.primary-button,
+.freelancer-primary-button,
+.matched-primary-button,
+.sales-primary-button,
+.ui-button-primary,
+.gx-header-cta-btn,
+.assignBtn,
+button.primary,
+a.primary,
+[class*="product-hub_primary"],
+[class*="primaryButton"] {
+  font-family: var(--font-space-grotesk), var(--gx-font-display, "Space Grotesk", sans-serif) !important;
+  font-weight: 700 !important;
+  color: #070806 !important;
+  background-color: var(--gx-primary, #d7ff2f) !important;
+  background: var(--gx-primary, #d7ff2f) !important;
+  border: 1px solid var(--gx-primary, #d7ff2f) !important;
+  border-radius: var(--gx-radius-btn, 14px) !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(215, 255, 47, 0.12) !important;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.gx-button-primary *,
+.primary-button *,
+.freelancer-primary-button *,
+.matched-primary-button *,
+.sales-primary-button *,
+.ui-button-primary *,
+.gx-header-cta-btn *,
+.assignBtn *,
+button.primary *,
+a.primary *,
+[class*="product-hub_primary"] *,
+[class*="primaryButton"] *,
+.gx-button-primary .gx-btn-label,
+.gx-button-primary span,
+.gx-button-primary svg {
+  color: #070806 !important;
+  stroke: #070806 !important;
+}
+
+.gx-button-primary:hover,
+.primary-button:hover,
+.freelancer-primary-button:hover,
+.matched-primary-button:hover,
+.sales-primary-button:hover,
+.ui-button-primary:hover,
+.gx-header-cta-btn:hover,
+.assignBtn:hover,
+button.primary:hover,
+a.primary:hover,
+[class*="product-hub_primary"]:hover,
+[class*="primaryButton"]:hover {
+  background-color: #e1ff62 !important;
+  background: #e1ff62 !important;
+  border-color: #e1ff62 !important;
+  color: #070806 !important;
+  box-shadow: 0 8px 24px rgba(215, 255, 47, 0.18) !important;
+  transform: translateY(-1px);
+}
+
+.gx-button-primary:hover *,
+.primary-button:hover *,
+.freelancer-primary-button:hover *,
+.matched-primary-button:hover *,
+.sales-primary-button:hover *,
+.ui-button-primary:hover *,
+.gx-header-cta-btn:hover *,
+.assignBtn:hover *,
+[class*="product-hub_primary"]:hover *,
+[class*="primaryButton"]:hover * {
+  color: #070806 !important;
+  stroke: #070806 !important;
+}
+
+.gx-button-secondary,
+.secondary-button,
+.freelancer-secondary-button,
+.ui-button-secondary,
+.ghost-button,
+.gx-header-login-btn,
+button.secondary,
+a.secondary,
+[class*="product-hub_secondary"],
+[class*="secondaryButton"] {
+  font-family: var(--font-space-grotesk), var(--gx-font-display, "Space Grotesk", sans-serif) !important;
+  font-weight: 600 !important;
+  color: #f4f7ef !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: var(--gx-radius-btn, 14px) !important;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.gx-button-secondary *,
+.secondary-button *,
+.freelancer-secondary-button *,
+.ui-button-secondary *,
+.ghost-button *,
+.gx-header-login-btn *,
+button.secondary *,
+a.secondary *,
+[class*="product-hub_secondary"] *,
+[class*="secondaryButton"] * {
+  color: #f4f7ef !important;
+}
+
+.gx-button-secondary:hover,
+.secondary-button:hover,
+.freelancer-secondary-button:hover,
+.ui-button-secondary:hover,
+.ghost-button:hover,
+.gx-header-login-btn:hover,
+button.secondary:hover,
+a.secondary:hover,
+[class*="product-hub_secondary"]:hover,
+[class*="secondaryButton"]:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* =========================================================================
+   Auth Tabs & Segmented Switchers (Linear/Vercel standard)
+   ========================================================================= */
+
+.public-auth-tabs {
+  display: inline-flex !important;
+  gap: 4px !important;
+  padding: 4px !important;
+  border-radius: 12px !important;
+  background: #0d110e !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.public-auth-tab {
+  min-height: 36px !important;
+  padding: 0 20px !important;
+  border-radius: 9px !important;
+  border: 1px solid transparent !important;
+  font-family: var(--font-space-grotesk), var(--gx-font-display, "Space Grotesk", sans-serif) !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  color: #98a192 !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.public-auth-tab:hover {
+  color: #f5f7fa !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.public-auth-tab.active {
+  background: rgba(215, 255, 47, 0.12) !important;
+  color: #d7ff2f !important;
+  border: 1px solid rgba(215, 255, 47, 0.28) !important;
+  font-weight: 700 !important;
+}
+
+/* Clean aside switch buttons */
+.public-auth-card-aside .ghost-button,
+.gx-form-footer-switch .ghost-button {
+  border-radius: 12px !important;
+  background: #121614 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #d8ded3 !important;
+  font-family: var(--font-space-grotesk), var(--gx-font-display, "Space Grotesk", sans-serif) !important;
+  font-weight: 600 !important;
+  font-size: 0.86rem !important;
+  padding: 10px 18px !important;
+  min-height: 40px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+}
+
+.public-auth-card-aside .ghost-button:hover,
+.gx-form-footer-switch .ghost-button:hover {
+  background: #1a221d !important;
+  border-color: rgba(215, 255, 47, 0.3) !important;
+  color: #ffffff !important;
+}
+
+/* Eliminate legacy loose duplicate link */
+.public-auth-footer {
+  display: none !important;
+}
+

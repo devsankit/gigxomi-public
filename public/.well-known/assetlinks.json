@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.gigxomi.app",
+      "sha256_cert_fingerprints": [
+        "2D:FD:06:DC:FD:A9:D3:30:63:75:62:15:E0:74:B4:E7:8C:0E:21:14:1B:E8:75:ED:E3:B1:DA:A5:C8:23:62:AB"
+      ]
+    }
+  }
+]

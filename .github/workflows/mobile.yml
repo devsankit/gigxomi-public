@@ -1,0 +1,73 @@
+name: Mobile App Checks
+
+on:
+  push:
+    branches:
+      - codex/mobile-app
+    paths:
+      - "mobile-app/**"
+      - "apps/mobile/**"
+      - ".github/workflows/mobile.yml"
+      - "docs/BRANCH_POLICY.md"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/aab-regression-audit.ps1"
+      - "scripts/branch-policy-check.mjs"
+      - "scripts/mobile-readiness-check.mjs"
+  pull_request:
+    branches:
+      - codex/mobile-app
+    paths:
+      - "mobile-app/**"
+      - "apps/mobile/**"
+      - ".github/workflows/mobile.yml"
+      - "docs/BRANCH_POLICY.md"
+      - "package.json"
+      - "package-lock.json"
+      - "scripts/aab-regression-audit.ps1"
+      - "scripts/branch-policy-check.mjs"
+      - "scripts/mobile-readiness-check.mjs"
+  workflow_dispatch:
+
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile-checks:
+    runs-on: ubuntu-latest
+    env:
+      EXPO_NO_TELEMETRY: "1"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Enforce mobile branch scope
+        run: npm run branch:check:strict
+
+      - name: Mobile API readiness
+        run: npm run mobile:readiness
+
+      - name: Install mobile dependencies
+        working-directory: mobile-app
+        run: npm ci
+
+      - name: Typecheck mobile app
+        working-directory: mobile-app
+        run: npm run typecheck
+
+      - name: Export Android bundle
+        working-directory: mobile-app
+        run: npx expo export --platform android

@@ -1,0 +1,5 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Run due headless WordPress publishing events independently of visitor traffic.
+* * * * * www-data /usr/bin/curl --fail --silent --show-error --max-time 30 'https://blog.gigxomi.com/wp-cron.php?doing_wp_cron=system' >/dev/null 2>&1

@@ -1,0 +1,72 @@
+{
+  "slug": "video-editing-client-portal",
+  "title": "Video Editing Client Portal: A Buyer's Feature Checklist",
+  "byline": "Gigxomi Editorial",
+  "verifiedAt": "29 August 2026",
+  "publishAt": "2026-09-03T09:30:00+05:30",
+  "editorialStatus": "approved",
+  "excerpt": "Evaluate a video editing client portal for secure access, briefs, files, review versions, approvals, delivery, communication, and account-level history.",
+  "focusKeyphrase": "video editing client portal",
+  "seoDescription": "Evaluate a video editing client portal for secure briefs, files, versioned feedback, approvals, delivery, communication, and client history.",
+  "introduction": "A video editing client portal should make it easier for a customer to provide a complete brief, review the correct version, approve delivery, and find the final assets later. A branded login is not enough. Agencies should test whether the portal creates one dependable client record while protecting other accounts, reducing feedback ambiguity, and fitting the communication habits clients will actually follow.",
+  "shortAnswer": "Choose a portal that gives each client a clearly isolated workspace with named stakeholders, project status, authoritative assets, version-aware feedback, approval history, delivery records, and an understandable support path. Keep the interface simpler than the internal production system. If clients prefer WhatsApp or Instagram, connect those conversations to accountable work instead of forcing every message through an unfamiliar dashboard.",
+  "decisionHeading": "Client portal acceptance checklist",
+  "decisionChecklist": [
+    "Can a client see only its own people, projects, files, messages, and financial records?",
+    "Is the current review version unmistakable on desktop and mobile?",
+    "Can the agency prove who approved what and when?",
+    "Do brief changes and new requests become accountable work?",
+    "Can final assets, expiry rules, and download permissions be understood without support?",
+    "Can stakeholders be added or removed without sharing passwords?",
+    "Can the agency export project and approval history if it migrates?"
+  ],
+  "sections": [
+    {
+      "heading": "Start with client isolation and identity",
+      "paragraphs": [
+        "Every person should have an individual account or verified identity. Shared client passwords make it difficult to remove access, attribute approvals, or investigate mistakes. Test the portal with two unrelated client accounts and direct links to projects, files, invoices, and messages. Search and notifications must preserve the same boundary.",
+        "Define who can invite additional stakeholders. A marketing lead may need to add a brand reviewer, while finance access should remain separate. The portal should show the agency team members relevant to the account without exposing private editor details, internal notes, unrelated assignments, or other clients."
+      ]
+    },
+    {
+      "heading": "Make the brief complete before editing starts",
+      "paragraphs": [
+        "A client portal can prevent avoidable revisions when it collects the objective, audience, platform, duration, aspect ratios, reference examples, brand assets, captions, music constraints, delivery date, and decision maker in a structured brief. Required fields should reflect the service rather than forcing every client through one oversized form.",
+        "Allow discussion around unclear inputs, then preserve the approved brief as a versioned record. If the client changes the objective or deliverables after work begins, the portal should make the change visible to the manager and support a revised deadline or quote. Silent form edits create the same confusion as scattered chat messages."
+      ]
+    },
+    {
+      "heading": "Keep feedback tied to the correct version",
+      "paragraphs": [
+        "The review screen should identify the asset, version, timecode, reviewer, comment state, and approval state. A client should not accidentally comment on an old export while the editor works on a newer cut. For complex work, test annotations, version comparison, comment resolution, reviewer groups, and downloadable review records.",
+        "Decide what formal approval means. A message saying looks good may not satisfy the agency's contract or delivery process. Use an explicit approval action with timestamp and identity, and define what happens when someone comments after approval. The history should remain readable without requiring an administrator export."
+      ]
+    },
+    {
+      "heading": "Connect preferred communication without losing accountability",
+      "paragraphs": [
+        "Some clients will reliably use a portal; others will continue sending questions through WhatsApp or Instagram. The agency can respect that preference while keeping responsibility visible. A connected inbox should preserve channel and customer identity, route the conversation to the right team, and let an important request become an owned task or scope change.",
+        "Do not copy messages between channels or accounts without clear boundaries. Confirm which replies go to the customer, which notes remain internal, how attachments are handled, and how the system behaves if an integration token expires. Fast replies matter, but incorrect recipients are a more serious failure than a short delay."
+      ]
+    },
+    {
+      "heading": "Design delivery and retention deliberately",
+      "paragraphs": [
+        "Final delivery should state which files are approved, their technical specifications, download location, retention period, and whether source files are included. If links expire, show the date in advance. If the portal depends on separate cloud storage, make the authoritative folder clear and test permissions after a team member leaves.",
+        "Set retention rules for raw footage, project files, previews, final exports, comments, contracts, and financial documents. Clients may expect the agency to act as an archive even when the agreement does not include it. Publish the policy, price extended storage where appropriate, and keep backups consistent with privacy and deletion commitments."
+      ]
+    },
+    {
+      "heading": "Pilot the portal with a real client",
+      "paragraphs": [
+        "Invite one cooperative recurring client and observe the journey without coaching every click. Measure how long briefing takes, where the client asks for help, whether reviewers find the right version, and whether delivery questions decline. Repeat the test on a phone because many approvals happen away from a desktop.",
+        "Gigxomi places client conversations and video editing agency operations in one broader workspace. Evaluate it when connected enquiries, manager-editor coordination, delivery, and business context matter alongside client access. Compare specialist review tools when frame-level proofing is the central requirement, and keep the portal experience focused on what the client needs to decide."
+      ]
+    }
+  ],
+  "officialSources": [
+    { "label": "Gigxomi agency workspace", "url": "https://www.gigxomi.com/" },
+    { "label": "Gigxomi privacy and retention information", "url": "https://www.gigxomi.com/privacy-policy" },
+    { "label": "Google Drive file sharing guidance", "url": "https://support.google.com/drive/answer/2494822?hl=en" }
+  ]
+}

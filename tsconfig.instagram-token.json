@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/lib/gigxomi/instagram-token-lifecycle.ts",
+    "src/lib/gigxomi/meta-instagram.ts",
+    "src/lib/gigxomi/dummy-platform-file-store.ts",
+    "src/app/api/meta/instagram/oauth/callback/route.ts",
+    "src/app/api/admin/instagram/route.ts",
+    "src/app/api/admin/instagram/refresh-token/route.ts",
+    "src/app/api/internal/instagram/refresh-tokens/route.ts",
+    "src/components/admin/admin-instagram-inbox-setup.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "mobile-app",
+    "apps/mobile",
+    ".next*"
+  ]
+}

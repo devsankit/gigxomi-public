@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Gigxomi project intake cover</title>
+  <desc id="desc">Gigxomi branded cover for WhatsApp project intake flow.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#04111f"/>
+      <stop offset="0.55" stop-color="#0d253f"/>
+      <stop offset="1" stop-color="#102b1f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#23d18b"/>
+      <stop offset="1" stop-color="#53a8ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="58" y="58" width="1084" height="514" rx="36" fill="#ffffff" opacity="0.06" stroke="#ffffff" stroke-opacity="0.14"/>
+  <circle cx="992" cy="154" r="118" fill="#23d18b" opacity="0.12"/>
+  <circle cx="1040" cy="470" r="190" fill="#53a8ff" opacity="0.12"/>
+  <g transform="translate(96 96)">
+    <rect x="0" y="0" width="96" height="96" rx="22" fill="url(#accent)"/>
+    <text x="48" y="63" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="800" fill="#04111f">GX</text>
+  </g>
+  <text x="96" y="265" font-family="Inter, Arial, sans-serif" font-size="68" font-weight="850" fill="#ffffff">Gigxomi</text>
+  <text x="96" y="335" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="760" fill="#dffbf0">Project intake</text>
+  <text x="96" y="405" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="520" fill="#dbe8f5">To edit your video, please fill this form.</text>
+  <g transform="translate(96 465)">
+    <rect x="0" y="0" width="238" height="54" rx="27" fill="#23d18b"/>
+    <text x="119" y="36" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="800" fill="#04111f">Start project brief</text>
+  </g>
+  <g transform="translate(690 178)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="0" y="0" width="300" height="300" rx="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-opacity="0.18"/>
+    <path d="M72 96h156M72 150h156M72 204h96" stroke="#ffffff" stroke-width="18" opacity="0.82"/>
+    <path d="M218 212l34 34 72-84" stroke="#23d18b" stroke-width="20"/>
+  </g>
+</svg>

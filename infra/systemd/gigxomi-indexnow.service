@@ -1,0 +1,15 @@
+[Unit]
+Description=Notify IndexNow of changed canonical Gigxomi public pages
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/var/www/gigxomi-app
+ExecStart=/usr/bin/flock --nonblock /var/www/gigxomi-app/.gigxomi/indexnow.lock /usr/bin/node scripts/submit-indexnow.mjs --submit
+TimeoutStartSec=20min
+Nice=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/var/www/gigxomi-app/.gigxomi

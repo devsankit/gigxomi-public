@@ -1,0 +1,72 @@
+name: Deploy WhatsApp Ingress
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-whatsapp-ingress
+  cancel-in-progress: false
+
+jobs:
+  deploy-ingress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      DEPLOY_HOST: ${{ vars.VPS_HOST || secrets.VPS_HOST || 'gigxomi.com' }}
+      DEPLOY_PORT: ${{ vars.VPS_SSH_PORT || secrets.VPS_SSH_PORT || '22' }}
+      DEPLOY_USER: ${{ vars.VPS_SSH_USER || secrets.VPS_SSH_USER || 'root' }}
+      META_WHATSAPP_APP_SECRET: ${{ secrets.META_WHATSAPP_APP_SECRET || secrets.META_APP_SECRET || secrets.FACEBOOK_APP_SECRET }}
+      WHATSAPP_APP_SECRET: ${{ secrets.WHATSAPP_APP_SECRET || secrets.META_WHATSAPP_APP_SECRET || secrets.META_APP_SECRET }}
+      META_APP_SECRET: ${{ secrets.META_APP_SECRET || secrets.FACEBOOK_APP_SECRET }}
+      FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET || secrets.META_APP_SECRET }}
+      GIGXOMI_META_APP_SECRET: ${{ secrets.GIGXOMI_META_APP_SECRET || secrets.META_APP_SECRET }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload isolated ingress source
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          port: ${{ env.DEPLOY_PORT }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          source: apps/whatsapp-ingress/server.mjs
+          target: /var/www/gigxomi-whatsapp-ingress-release
+          overwrite: true
+
+      - name: Restart only the isolated ingress
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.DEPLOY_HOST }}
+          port: ${{ env.DEPLOY_PORT }}
+          username: ${{ env.DEPLOY_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_KEY_PASSPHRASE }}
+          password: ${{ secrets.VPS_SSH_PASSWORD }}
+          envs: META_WHATSAPP_APP_SECRET,WHATSAPP_APP_SECRET,META_APP_SECRET,FACEBOOK_APP_SECRET,GIGXOMI_META_APP_SECRET
+          script: |
+            set -e
+            SOURCE="/var/www/gigxomi-whatsapp-ingress-release/apps/whatsapp-ingress/server.mjs"
+            TARGET_DIRECTORY="/var/www/gigxomi-whatsapp-ingress"
+            TARGET="${TARGET_DIRECTORY}/server.mjs"
+            test -s "${SOURCE}" || { echo "ERROR: Uploaded ingress source is missing."; exit 1; }
+            install -d -o root -g root -m 0750 "${TARGET_DIRECTORY}"
+            install -d -o root -g root -m 0700 /var/lib/gigxomi/whatsapp-ingress
+            install -o root -g root -m 0640 "${SOURCE}" "${TARGET}"
+            if pm2 describe gigxomi-whatsapp-ingress >/dev/null 2>&1; then
+              pm2 restart gigxomi-whatsapp-ingress --update-env
+            else
+              pm2 start "${TARGET}" --name gigxomi-whatsapp-ingress
+            fi
+            pm2 save
+            for ATTEMPT in 1 2 3 4 5; do
+              if curl --fail --silent --show-error http://127.0.0.1:3001/healthz; then
+                exit 0
+              fi
+              sleep 1
+            done
+            echo "ERROR: Dedicated WhatsApp ingress did not become healthy."
+            exit 1

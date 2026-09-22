@@ -1,0 +1,72 @@
+{
+  "slug": "replace-video-editing-agency-spreadsheets",
+  "title": "Replace Video Editing Agency Spreadsheets Without Losing Control",
+  "byline": "Gigxomi Editorial",
+  "verifiedAt": "29 August 2026",
+  "publishAt": "2026-09-04T09:30:00+05:30",
+  "editorialStatus": "approved",
+  "excerpt": "Move a growing editing operation from shared sheets to accountable software without losing active projects, client history, ownership, or financial controls.",
+  "focusKeyphrase": "replace video editing agency spreadsheets",
+  "seoDescription": "Replace video editing agency spreadsheets safely with a staged migration for projects, clients, editors, deadlines, approvals, finance, and reporting.",
+  "introduction": "The decision to replace video editing agency spreadsheets usually arrives after the sheet has become the business's unofficial database. Clients, assignments, deadlines, links, invoices, and editor payments may depend on columns understood by only one person. A safe migration does not begin with importing every row. It begins by deciding which records are authoritative, which workflows need real ownership, and which historical data is worth carrying forward.",
+  "shortAnswer": "Freeze new spreadsheet design, document the current workflow, clean the active records, and pilot one representative client in the new system. Migrate active work first, preserve a read-only archive, reconcile project and finance totals, and set a clear cutover date. Do not run two writable systems indefinitely. The goal is not to reproduce every column—it is to create dependable ownership, permissions, transitions, and reporting.",
+  "decisionHeading": "Spreadsheet migration go-live checklist",
+  "decisionChecklist": [
+    "Has every source sheet been assigned an owner and retention decision?",
+    "Are duplicate clients, editors, projects, and status labels resolved?",
+    "Is the active-project import reconciled against the original records?",
+    "Can users complete their real role without administrator permissions?",
+    "Is there one declared system of record after cutover?",
+    "Are finance balances and payout states independently verified?",
+    "Is rollback limited, documented, and tested before launch?"
+  ],
+  "sections": [
+    {
+      "heading": "Inventory what the spreadsheets actually control",
+      "paragraphs": [
+        "List every sheet, form, script, automation, dashboard, and person-dependent routine. For each one, record its owner, purpose, users, update frequency, sensitive fields, linked files, formulas, downstream reports, and what would break if it stopped updating. Include private copies used by managers; shadow sheets often contain the missing workflow.",
+        "Classify data as active operational, legally or financially retained, analytically useful, or disposable. A current project needs detailed migration. A six-year-old status log may only need a secure archive. Reducing the scope lowers import risk and prevents obsolete categories from shaping the new system."
+      ]
+    },
+    {
+      "heading": "Standardize identities, statuses, and ownership",
+      "paragraphs": [
+        "Spreadsheets tolerate duplicate names, inconsistent phone formats, renamed clients, and free-text statuses. Software usually requires stable identities and defined relationships. Create unique records for organizations, contacts, editors, managers, projects, and financial transactions. Resolve aliases before import rather than hoping the destination will merge them correctly.",
+        "Map old statuses to a smaller controlled workflow. In edit, editing, first cut, client feedback, revision one, revision two, approved, delivered, and paid may represent useful distinctions; waiting, pending, on hold, and delayed require explicit reasons. Assign one owner to every active item and identify the customer-facing account before cutover."
+      ]
+    },
+    {
+      "heading": "Move active projects in a controlled pilot",
+      "paragraphs": [
+        "Choose a recurring client with typical complexity and a cooperative internal team. Configure the service, roles, deadlines, brief requirements, review stages, notifications, file links, and reporting. Import only that client's active work, then complete a real delivery while the source sheet remains available as a reference.",
+        "Record missing fields, duplicate entry, permission gaps, notification noise, slow screens, and misunderstood terminology. Fix the operating model before a bulk import. If users need a new custom field for every exception, determine whether the service is genuinely variable or the process lacks a clear rule."
+      ]
+    },
+    {
+      "heading": "Reconcile money separately from project status",
+      "paragraphs": [
+        "A delivered project does not prove payment, and a checkout link does not prove settlement. Migrate invoice references, amounts, currency, tax context, payment-provider identifiers, verified status, refunds, editor earnings, approvals, and payout status with separate controls. Compare totals by client and editor before and after import.",
+        "Keep the accounting or payment provider authoritative where required. If the agency software shows financial context, document how it receives verified updates and how discrepancies are resolved. Never convert blank or ambiguous spreadsheet cells into paid or completed states just to make the import pass."
+      ]
+    },
+    {
+      "heading": "Cut over with one writable system",
+      "paragraphs": [
+        "Announce the final update window, stop new entries in the old sheets, run the last export, import and reconcile, then make the old workspace read-only. Give each role a short scenario-based checklist: receive an enquiry, assign work, update a deadline, request review, approve delivery, and find a historical client record.",
+        "Define a brief rollback window for severe access or data-integrity failures, not for normal preference questions. After go-live, track exceptions in one controlled list and fix the root process. Keeping both systems writable feels safe but creates two competing truths and makes every report suspect."
+      ]
+    },
+    {
+      "heading": "Measure whether the migration improved the business",
+      "paragraphs": [
+        "Compare the period before and after cutover using operational measures: response time, unowned work, missed deadlines, revision rounds, manager time spent chasing updates, client approval time, invoice delay, and payout reconciliation effort. Adoption metrics are useful only when tied to these outcomes.",
+        "Gigxomi is designed to connect video editing agency conversations, people, assignments, work, delivery, accounting, and payout context. It can be evaluated as a replacement for several operational sheets, but the agency should pilot current behavior, verify permissions and exports, and retain an appropriate archive. The migration plan matters as much as the selected software."
+      ]
+    }
+  ],
+  "officialSources": [
+    { "label": "Gigxomi operating workspace", "url": "https://www.gigxomi.com/" },
+    { "label": "Gigxomi privacy policy", "url": "https://www.gigxomi.com/privacy-policy" },
+    { "label": "Google Workspace shared drive guidance", "url": "https://support.google.com/a/users/answer/7212025?hl=en" }
+  ]
+}
