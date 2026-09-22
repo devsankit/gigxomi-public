@@ -99,14 +99,14 @@ export function GigxomiHomepage({}: GigxomiHomepageProps = {}) {
 
                 <div className="gx-hero-actions">
                   <PrimaryButton
-                    href="/signup?role=agency"
+                    href="https://app.gigxomi.com/signup?role=agency"
                     icon={<ArrowRight size={16} />}
                     onClick={() =>
                       trackCtaClick({
                         ctaText: "Start free workspace",
                         location: "hero",
                         pageType: "homepage",
-                        targetUrl: "/signup?role=agency",
+                        targetUrl: "https://app.gigxomi.com/signup?role=agency",
                       })
                     }
                   >
@@ -843,14 +843,14 @@ export function GigxomiHomepage({}: GigxomiHomepageProps = {}) {
               </p>
               <div className="gx-final-cta-actions">
                 <PrimaryButton
-                  href="/signup?role=agency"
+                  href="https://app.gigxomi.com/signup?role=agency"
                   icon={<ArrowRight size={15} />}
                   onClick={() =>
                     trackCtaClick({
                       ctaText: "Start free workspace",
                       location: "section",
                       pageType: "homepage",
-                      targetUrl: "/signup?role=agency",
+                      targetUrl: "https://app.gigxomi.com/signup?role=agency",
                     })
                   }
                 >
@@ -887,8 +887,8 @@ export function GigxomiHomepage({}: GigxomiHomepageProps = {}) {
               >
                 <div>
                   <span>Freelance video editor? </span>
-                  <Link
-                    href="/signup?role=freelancer"
+                  <a
+                    href="https://app.gigxomi.com/signup?role=freelancer"
                     style={{
                       color: "var(--gx-lime, #d7ff2f)",
                       fontWeight: 600,
@@ -900,12 +900,12 @@ export function GigxomiHomepage({}: GigxomiHomepageProps = {}) {
                         ctaText: "Create editor profile",
                         location: "section",
                         pageType: "homepage",
-                        targetUrl: "/signup?role=freelancer",
+                        targetUrl: "https://app.gigxomi.com/signup?role=freelancer",
                       })
                     }
                   >
                     Create editor profile &rarr;
-                  </Link>
+                  </a>
                 </div>
                 <div>
                   <span>Joining an existing team? </span>

@@ -198,8 +198,8 @@ export function IntentConversionPanel() {
 
         <div className={styles.choicesGrid}>
           {/* Agency Path */}
-          <Link
-            href="/signup?role=agency"
+          <a
+            href="https://app.gigxomi.com/signup?role=agency"
             className={styles.choiceCard}
             onClick={() => {
               trackConversionPathSelected({
@@ -222,11 +222,11 @@ export function IntentConversionPanel() {
             <span className={styles.choiceCta}>
               Start free workspace <ArrowRight size={15} />
             </span>
-          </Link>
+          </a>
 
           {/* Freelancer Path */}
-          <Link
-            href="/signup?role=freelancer"
+          <a
+            href="https://app.gigxomi.com/signup?role=freelancer"
             className={styles.choiceCard}
             onClick={() => {
               trackConversionPathSelected({
