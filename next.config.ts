@@ -71,17 +71,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/service",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/service/:slug+",
-        destination: "/services/:slug+",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/services",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
@@ -101,7 +101,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/projects/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
@@ -111,32 +111,32 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/service-tag/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/service-category/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/product-category/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/shop/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/tag/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/register/:path*",
-        destination: "/signup",
+        destination: "https://app.gigxomi.com/signup",
         permanent: true,
       },
       {
@@ -156,7 +156,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/messages/:path*",
-        destination: "/login",
+        destination: "https://app.gigxomi.com/login",
         permanent: true,
       },
       {
@@ -181,7 +181,7 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/search/:path*",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
@@ -196,12 +196,117 @@ const nextConfig: NextConfig = {
       },
       {
         source: "/gigs",
-        destination: "/discover",
+        destination: "/",
         permanent: true,
       },
       {
         source: "/gigs/:slug*",
-        destination: "/services/:slug*",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/login",
+        destination: "https://app.gigxomi.com/login",
+        permanent: true,
+      },
+      {
+        source: "/login/:path*",
+        destination: "https://app.gigxomi.com/login",
+        permanent: true,
+      },
+      {
+        source: "/signup",
+        destination: "https://app.gigxomi.com/signup",
+        permanent: true,
+      },
+      {
+        source: "/signup/:path*",
+        destination: "https://app.gigxomi.com/signup",
+        permanent: true,
+      },
+      {
+        source: "/forgot-password",
+        destination: "https://app.gigxomi.com/forgot-password",
+        permanent: true,
+      },
+      {
+        source: "/forgot-password/:path*",
+        destination: "https://app.gigxomi.com/forgot-password",
+        permanent: true,
+      },
+      {
+        source: "/reset-password",
+        destination: "https://app.gigxomi.com/reset-password",
+        permanent: true,
+      },
+      {
+        source: "/reset-password/:path*",
+        destination: "https://app.gigxomi.com/reset-password",
+        permanent: true,
+      },
+      {
+        source: "/verify-otp",
+        destination: "https://app.gigxomi.com/verify-otp",
+        permanent: true,
+      },
+      {
+        source: "/verify-otp/:path*",
+        destination: "https://app.gigxomi.com/verify-otp",
+        permanent: true,
+      },
+      {
+        source: "/unauthorized",
+        destination: "https://app.gigxomi.com/login",
+        permanent: true,
+      },
+      {
+        source: "/webinar",
+        destination: "/pricing",
+        permanent: true,
+      },
+      {
+        source: "/webinar/:path*",
+        destination: "/pricing",
+        permanent: true,
+      },
+      {
+        source: "/motion",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/motion/:path*",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/token-amount",
+        destination: "/pricing",
+        permanent: true,
+      },
+      {
+        source: "/token-amount/:path*",
+        destination: "/pricing",
+        permanent: true,
+      },
+      {
+        source: "/discover",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/discover/:path*",
+        destination: "/",
+        permanent: true,
+      },
+      {
+        source: "/editor",
+        destination: "/freelancers",
+        permanent: true,
+      },
+      {
+        source: "/editor/:path*",
+        destination: "/freelancers",
         permanent: true,
       },
     ];

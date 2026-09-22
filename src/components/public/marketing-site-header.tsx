@@ -394,10 +394,10 @@ export function MarketingSiteHeader() {
                   </a>
                 )}
                 {!isSignupPage && (
-                  <Link className="gx-nav-agency" href="/signup?role=agency" onClick={() => setMenuOpen(false)} prefetch={false}>
+                  <a className="gx-nav-agency" href="https://app.gigxomi.com/signup?role=agency" onClick={() => setMenuOpen(false)}>
                     <span>Start free workspace</span>
                     <ArrowUpRight size={17} />
-                  </Link>
+                  </a>
                 )}
               </>
             )}
@@ -523,10 +523,10 @@ export function MarketingSiteHeader() {
                 </a>
               )}
               {!isSignupPage && (
-                <Link className="gx-header-primary" href="/signup?role=agency" prefetch={false}>
+                <a className="gx-header-primary" href="https://app.gigxomi.com/signup?role=agency">
                   <span>Start free workspace</span>
                   <ArrowUpRight className="gx-header-primary-arrow" size={17} strokeWidth={2} />
-                </Link>
+                </a>
               )}
             </>
           )}

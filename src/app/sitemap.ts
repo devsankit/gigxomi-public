@@ -1,12 +1,9 @@
 import type { MetadataRoute } from "next";
 
 import { listPublicAgencyListingsFromFile } from "@/lib/gigxomi/agency-listing-store";
-import { listPublicServicesFromFile } from "@/lib/gigxomi/dummy-platform-file-store";
 import { listFallbackPublishedKnowledgeBaseArticles, listPublishedKnowledgeBaseArticles } from "@/lib/gigxomi/knowledge-base-store";
-import { loadMarketplaceDataFromWordPress } from "@/lib/gigxomi/wordpress-marketplace";
 import { indexableBlogPosts } from "@/lib/seo/blog-posts";
 import { buildSiteUrl } from "@/lib/seo/company-knowledge-base";
-import { getAllNicheSlugs } from "@/lib/seo/niche-catalog";
 import { listWordPressEditorialPosts } from "@/lib/seo/wordpress-editorial";
 
 export const revalidate = 300;
@@ -20,11 +17,8 @@ async function listSitemapKnowledgeBaseArticles() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [agencies, services, knowledgeBaseArticles, wordpressEditorialPosts] = await Promise.all([
+  const [agencies, knowledgeBaseArticles, wordpressEditorialPosts] = await Promise.all([
     listPublicAgencyListingsFromFile(),
-    loadMarketplaceDataFromWordPress()
-      .then((result) => result.services)
-      .catch(() => listPublicServicesFromFile()),
     listSitemapKnowledgeBaseArticles(),
     listWordPressEditorialPosts(),
   ]);
@@ -72,11 +66,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: buildSiteUrl("/pricing"),
       changeFrequency: "weekly",
       priority: 0.82,
-    },
-    {
-      url: buildSiteUrl("/discover"),
-      changeFrequency: "daily",
-      priority: 0.88,
     },
     {
       url: buildSiteUrl("/freelancers"),
@@ -160,16 +149,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         changeFrequency: "weekly" as const,
         priority: 0.8,
       })),
-    ...services.map((service) => ({
-      url: buildSiteUrl(`/services/${service.slug}`),
-      changeFrequency: "weekly" as const,
-      priority: 0.72,
-    })),
-    ...getAllNicheSlugs().map((slug) => ({
-      url: buildSiteUrl(`/services/category/${slug}`),
-      changeFrequency: "weekly" as const,
-      priority: 0.85,
-    })),
     ...agencies.map((agency) => ({
       url: buildSiteUrl(`/agency/${agency.slug}`),
       ...(agency.updatedAt ? { lastModified: new Date(agency.updatedAt) } : {}),
