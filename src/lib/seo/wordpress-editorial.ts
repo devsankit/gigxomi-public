@@ -11,7 +11,7 @@ const WORDPRESS_ORIGIN = "https://blog.gigxomi.com";
 const WORDPRESS_API_BASE = `${WORDPRESS_ORIGIN}/wp-json/wp/v2`;
 const EDITORIAL_CATEGORY_SLUG = "gigxomi-editorial";
 const GROWTH_GUIDE_CATEGORY_SLUG = "video-editor-client-growth";
-const WORDPRESS_REVALIDATE_SECONDS = 300;
+const WORDPRESS_REVALIDATE_SECONDS = 30;
 const WORDPRESS_TIMEOUT_MS = 15_000;
 
 type WordPressRendered = {
