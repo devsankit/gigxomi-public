@@ -28,6 +28,9 @@ type PageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const dynamicParams = true;
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const wordpressPosts = await listWordPressEditorialPosts();
   return [
@@ -124,10 +127,10 @@ export default async function BlogPostPage({ params }: PageProps) {
   const post = getBlogPost(slug);
 
   if (!post) {
-    const wordpressPosts = await listWordPressEditorialPosts();
-    const wordpressPost = wordpressPosts.find((item) => item.slug === slug);
+    const wordpressPost = await getWordPressEditorialPost(slug);
     if (!wordpressPost) notFound();
 
+    const wordpressPosts = await listWordPressEditorialPosts();
     return (
       <MarketingSiteShell>
         <main className="gx-blog-page blog-canvas">

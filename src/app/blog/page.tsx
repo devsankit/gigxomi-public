@@ -172,15 +172,15 @@ export default async function BlogPage() {
           </div>
         </section>
 
-        {wordpressGrowthGuides.length ? (
-          <section className="blog-section" id="client-growth-guides">
+        {wordpressPosts.length ? (
+          <section className="blog-section" id="wordpress-editorial">
             <div className="blog-section-heading">
               <p className="blog-kicker">Gigxomi Editorial</p>
-              <h2>Latest video editing client-growth guides</h2>
-              <p>Practical, reader-first playbooks for outreach, pricing, delivery, and building a durable editing business.</p>
+              <h2>Latest video editing agency guides from WordPress</h2>
+              <p>Practical, reader-first playbooks published directly through WordPress editorial.</p>
             </div>
             <div className="blog-feature-grid">
-              {wordpressGrowthGuides.map((post) => (
+              {wordpressPosts.slice(0, 12).map((post) => (
                 <Link className="blog-feature-card" href={`/blog/${post.slug}`} key={post.id}>
                   <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}>
                     <Image
@@ -191,35 +191,7 @@ export default async function BlogPage() {
                       style={{ objectFit: "cover" }}
                     />
                   </div>
-                  <span>Updated {new Date(post.modifiedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
-                  <strong>{post.title}</strong>
-                  <p>{post.excerpt}</p>
-                </Link>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        {wordpressComparisons.length ? (
-          <section className="blog-section" id="software-comparisons">
-            <div className="blog-section-heading">
-              <p className="blog-kicker">Gigxomi Editorial</p>
-              <h2>Current software comparisons for video editing agencies</h2>
-              <p>Balanced buyer guides verified against official product sources and Gigxomi&apos;s documented capabilities.</p>
-            </div>
-            <div className="blog-feature-grid">
-              {wordpressComparisons.map((post) => (
-                <Link className="blog-feature-card" href={`/blog/${post.slug}`} key={post.id}>
-                  <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                    <Image
-                      src={post.featuredImageUrl || getBlogPostHeroImage(post)}
-                      alt={post.featuredImageAlt || post.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      style={{ objectFit: "cover" }}
-                    />
-                  </div>
-                  <span>Verified {new Date(post.modifiedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
+                  <span>Published {new Date(post.publishedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
                   <strong>{post.title}</strong>
                   <p>{post.excerpt}</p>
                 </Link>

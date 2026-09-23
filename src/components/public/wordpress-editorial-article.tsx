@@ -1,8 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { BlogAuthorEEAT } from "@/components/public/blog-author-eeat";
+import { BlogKeyTakeaways } from "@/components/public/blog-key-takeaways";
+import { BlogTableOfContents } from "@/components/public/blog-table-of-contents";
+import { BlogWorkflowDiagram } from "@/components/public/blog-workflow-diagram";
 import type { BlogPost } from "@/lib/seo/blog-posts";
-import { blogImage, getBlogPost } from "@/lib/seo/blog-posts";
+import { blogImage, getBlogPost, getBlogPostHeroImage } from "@/lib/seo/blog-posts";
 import { buildSiteUrl, companyKnowledgeBase } from "@/lib/seo/company-knowledge-base";
 import type { WordPressEditorialPost } from "@/lib/seo/wordpress-editorial";
 
@@ -11,6 +15,40 @@ type Props = {
   relatedLocalPosts: BlogPost[];
   relatedWordPressPosts: WordPressEditorialPost[];
 };
+
+function processWordPressContent(html: string) {
+  const headings: Array<{ id: string; text: string; level: number }> = [];
+  let index = 0;
+  const processedHtml = html.replace(/<h2([^>]*)>(.*?)<\/h2>/gi, (_match, attrs, content) => {
+    const text = content.replace(/<[^>]+>/g, "").trim();
+    const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `section-${index}`;
+    index++;
+    headings.push({ id, text, level: 2 });
+    return `<h2 id="${id}"${attrs}>${content}</h2>`;
+  });
+  return { processedHtml, headings };
+}
+
+function extractCheckpoints(html: string, fallbackExcerpt: string): string[] {
+  const listItems: string[] = [];
+  const liRegex = /<li[^>]*>(.*?)<\/li>/gi;
+  let match: RegExpExecArray | null;
+  while ((match = liRegex.exec(html)) !== null && listItems.length < 4) {
+    const text = match[1].replace(/<[^>]+>/g, "").trim();
+    if (text.length > 20 && text.length < 160) {
+      listItems.push(text);
+    }
+  }
+  if (listItems.length < 3) {
+    listItems.push(
+      fallbackExcerpt || "Direct client acquisition without platform commission cuts or middleman dependencies.",
+      "Two-Lane masked communication protects client relationships from editor poaching.",
+      "Clear scope agreements and revision windows prevent project stagnation.",
+      "Systematized manager review layers maintain consistent video delivery SLAs."
+    );
+  }
+  return listItems.slice(0, 4);
+}
 
 function extractFaqsFromContent(contentHtml: string): Array<{ question: string; answer: string }> {
   const faqs: Array<{ question: string; answer: string }> = [];
@@ -38,10 +76,14 @@ function extractFaqsFromContent(contentHtml: string): Array<{ question: string; 
 
 export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWordPressPosts }: Props) {
   const articleUrl = buildSiteUrl(`/blog/${post.slug}`);
-  const heroImage = post.featuredImageUrl || blogImage;
+  const heroImage = post.featuredImageUrl || getBlogPostHeroImage(post);
   const isGrowthGuide = post.contentKind === "growth-guide";
   const localPost = getBlogPost(post.slug);
   const faqs = localPost?.faqs?.length ? localPost.faqs : extractFaqsFromContent(post.contentHtml);
+  const { processedHtml, headings } = processWordPressContent(post.contentHtml);
+  const checkpoints = extractCheckpoints(post.contentHtml, post.excerpt);
+  const words = post.contentHtml.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+  const readingTimeMinutes = Math.max(3, Math.round(words / 200));
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -79,6 +121,8 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
         "@type": "ImageObject",
         "@id": `${articleUrl}#primaryimage`,
         url: heroImage.startsWith("http") ? heroImage : buildSiteUrl(heroImage),
+        width: 1200,
+        height: 630,
         caption: post.featuredImageAlt,
       },
       {
@@ -90,9 +134,10 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
         datePublished: post.publishedAt,
         dateModified: post.modifiedAt,
         author: {
-          "@type": "Organization",
-          name: post.authorName,
-          url: buildSiteUrl("/blog/editorial-methodology"),
+          "@type": "Person",
+          name: "Ankit Rathore",
+          url: buildSiteUrl("/about"),
+          jobTitle: "Founder & Post-Production Systems Architect",
         },
         publisher: {
           "@type": "Organization",
@@ -102,6 +147,10 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
             "@type": "ImageObject",
             url: buildSiteUrl(companyKnowledgeBase.logoPath),
           },
+        },
+        speakable: {
+          "@type": "SpeakableSpecification",
+          cssSelector: [".gx-takeaways-lead", ".gx-takeaways-grid", "h1"],
         },
         mainEntityOfPage: { "@id": `${articleUrl}#webpage` },
         isAccessibleForFree: true,
@@ -151,7 +200,7 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
           <h1>{post.title}</h1>
           <p>{post.excerpt}</p>
           <div className="blog-meta-row">
-            <span>{post.authorName}</span>
+            <span>Ankit Rathore (Founder)</span>
             <span>
               Verified {new Date(post.modifiedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}
             </span>
@@ -165,6 +214,7 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
 
       <div className="blog-article-layout">
         <aside className="blog-article-sidebar">
+          {headings.length > 0 && <BlogTableOfContents headings={headings} />}
           <div className="blog-sidebar-panel">
             <strong>{isGrowthGuide ? "Practical growth standard" : "Buyer-guide standard"}</strong>
             <p>
@@ -221,7 +271,22 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
         </aside>
 
         <div className="blog-article-body">
-          <div className="blog-wordpress-content" dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
+          <BlogKeyTakeaways
+            title="Executive Summary & Takeaways"
+            excerpt={post.excerpt}
+            checkpoints={checkpoints}
+            readingTimeMinutes={readingTimeMinutes}
+          />
+
+          <div className="blog-wordpress-content" dangerouslySetInnerHTML={{ __html: processedHtml }} />
+
+          {isGrowthGuide && <BlogWorkflowDiagram />}
+
+          <BlogAuthorEEAT
+            authorName="Ankit Rathore"
+            updatedAt={post.modifiedAt}
+            publishedAt={post.publishedAt}
+          />
 
           <section className="blog-cta-panel">
             <span className="meta-pill" style={{ display: "inline-block", marginBottom: "8px" }}>0% Commission · Anti-Poaching Shield · 14-Day Trial</span>
