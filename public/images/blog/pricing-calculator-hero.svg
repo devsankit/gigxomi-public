@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F17"/>
+      <stop offset="50%" stop-color="#080C14"/>
+      <stop offset="100%" stop-color="#04060A"/>
+    </linearGradient>
+    <radialGradient id="emerald-glow" cx="80%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0B0F17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lime-glow" cx="20%" cy="80%" r="40%">
+      <stop offset="0%" stop-color="#D7FF2F" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0B0F17" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.4"/>
+    </pattern>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#emerald-glow)"/>
+  <rect width="1200" height="630" fill="url(#lime-glow)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Brand Watermark & Tag -->
+  <g transform="translate(80, 70)">
+    <rect width="140" height="32" rx="16" fill="#10B981" fill-opacity="0.1" stroke="#10B981" stroke-width="1"/>
+    <text x="70" y="21" fill="#34D399" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">PRICING BLUEPRINT</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="150" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.5">PRICING &amp; MARGINS</text>
+  <text x="80" y="200" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500">Video Editing Rates, Retainers &amp; Profit Benchmarks 2026</text>
+
+  <!-- Pricing Cards Matrix -->
+  <g transform="translate(80, 250)">
+    <!-- Hourly Trap Card -->
+    <rect x="0" y="0" width="310" height="280" rx="12" fill="url(#card-grad)" stroke="#EF4444" stroke-opacity="0.3" stroke-width="1"/>
+    <text x="20" y="32" fill="#F87171" font-family="system-ui, sans-serif" font-size="13" font-weight="700">THE HOURLY TRAP</text>
+    <text x="20" y="68" fill="#F1F5F9" font-family="system-ui, sans-serif" font-size="22" font-weight="700">$20 - $45 / hour</text>
+    <text x="20" y="98" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Punishes production speed</text>
+    <text x="20" y="122" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Client audits every time-tracked minute</text>
+    <text x="20" y="146" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Constant revenue volatility</text>
+    <text x="20" y="170" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Zero scale or delegation leverage</text>
+    <rect x="20" y="220" width="270" height="36" rx="8" fill="#EF4444" fill-opacity="0.1"/>
+    <text x="155" y="243" fill="#F87171" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Income Cap: $3,000/mo</text>
+
+    <!-- Project-Based Card -->
+    <rect x="345" y="0" width="310" height="280" rx="12" fill="url(#card-grad)" stroke="#38BDF8" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="365" y="32" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="13" font-weight="700">PER-PROJECT SCOPE</text>
+    <text x="365" y="68" fill="#F1F5F9" font-family="system-ui, sans-serif" font-size="22" font-weight="700">₹15,000 - ₹60,000</text>
+    <text x="365" y="98" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Value-anchored deliverables</text>
+    <text x="365" y="122" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Fixed revision limits (max 2 rounds)</text>
+    <text x="365" y="146" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• 50% upfront payment gate</text>
+    <text x="365" y="170" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Re-pitching required every month</text>
+    <rect x="365" y="220" width="270" height="36" rx="8" fill="#38BDF8" fill-opacity="0.1"/>
+    <text x="500" y="243" fill="#38BDF8" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Average Margin: 45%</text>
+
+    <!-- Monthly Retainer Tier -->
+    <rect x="690" y="0" width="350" height="280" rx="12" fill="url(#card-grad)" stroke="#D7FF2F" stroke-width="1.5"/>
+    <text x="710" y="32" fill="#D7FF2F" font-family="system-ui, sans-serif" font-size="13" font-weight="700">RECURRING AGENCY RETAINER</text>
+    <text x="710" y="68" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="22" font-weight="700">$1,500 - $4,500 / month</text>
+    <text x="710" y="98" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• Guaranteed monthly cash flow</text>
+    <text x="710" y="122" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• 65%+ gross operating margins</text>
+    <text x="710" y="146" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• Curated editor delegation without risk</text>
+    <text x="710" y="170" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• 0% platform fee on Gigxomi</text>
+    <rect x="710" y="220" width="310" height="36" rx="8" fill="#D7FF2F"/>
+    <text x="865" y="243" fill="#0B0F17" font-family="system-ui, sans-serif" font-size="13" font-weight="800" text-anchor="middle">RECOMMENDED MODEL</text>
+  </g>
+
+  <!-- Bottom Metric Bar -->
+  <g transform="translate(80, 565)">
+    <text x="0" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">BENCHMARK: 2026 RATES</text>
+    <text x="350" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">TIER: INDIA &amp; INTERNATIONAL</text>
+    <text x="650" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">SAVINGS: 0% COMMISSION SAVED</text>
+    <text x="970" y="20" fill="#D7FF2F" font-family="system-ui, sans-serif" font-size="13" font-weight="700">GIGXOMI.COM</text>
+  </g>
+</svg>

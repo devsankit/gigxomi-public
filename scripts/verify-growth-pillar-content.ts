@@ -2,6 +2,7 @@ import fs from "node:fs";
 
 import { growthPillarPosts } from "../src/lib/seo/growth-pillar-posts";
 import { growthSupportingPosts } from "../src/lib/seo/growth-support-posts";
+import { searchLeaderPosts } from "../src/lib/seo/search-leader-posts";
 import { getAllNicheSlugs } from "../src/lib/seo/niche-catalog";
 import { retiredBlogRedirects } from "../src/lib/seo/retired-blog-redirects";
 
@@ -40,11 +41,22 @@ const expectedSupportingSlugs = [
   "video-editing-client-onboarding-checklist",
   "multi-editor-revision-management-for-agencies",
   "video-editing-retainer-pricing-for-agencies",
+  "how-to-create-a-deliverables-schedule",
+  "video-editing-agency-starter-kit",
+  "mastering-client-reviews-and-approvals",
+  "video-editing-pricing-for-recurring-campaigns",
+  "5-bottlenecks-in-video-editing-agencies",
+  "in-house-vs-outsourced-video-editing",
+  "building-video-editing-business-from-home",
+  "best-practices-for-consistent-video-quality",
+  "top-10-workflows-video-editing-agency",
+  "peak-performing-video-editing-agency-website",
 ] as const;
 
 const pillarSlugs = new Set(growthPillarPosts.map((post) => post.slug));
 const allWrittenPosts = [...growthPillarPosts, ...growthSupportingPosts];
 const writtenSlugs = new Set(allWrittenPosts.map((post) => post.slug));
+const allKnownLocalSlugs = new Set([...allWrittenPosts, ...searchLeaderPosts].map((post) => post.slug));
 if (growthPillarPosts.length !== expectedKeywords.length) {
   fail(`Expected ${expectedKeywords.length} pillar posts, found ${growthPillarPosts.length}.`);
 }
@@ -85,7 +97,7 @@ for (const post of allWrittenPosts) {
   if (post.faqs.length < 3) fail(`${post.slug} needs at least three visible FAQs.`);
   for (const link of post.internalLinks) {
     const blogSlug = link.href.match(/^\/blog\/([^/?#]+)/)?.[1];
-    if (blogSlug && !writtenSlugs.has(blogSlug)) fail(`${post.slug} links to missing local article ${blogSlug}.`);
+    if (blogSlug && !allKnownLocalSlugs.has(blogSlug)) fail(`${post.slug} links to missing local article ${blogSlug}.`);
   }
 
   const validNicheSlugs = new Set(getAllNicheSlugs());
@@ -108,8 +120,8 @@ for (const post of allWrittenPosts) {
 
 for (const post of growthSupportingPosts) {
   if (post.wordCount < 500) fail(`${post.slug} needs at least 500 words as a supporting article.`);
-  if (!post.internalLinks.some((link) => link.href === "/blog/how-to-get-video-editing-clients")) {
-    fail(`${post.slug} must link to the primary client-acquisition pillar.`);
+  if (!post.internalLinks.some((link) => link.href.startsWith("/blog/") && (link.href === "/blog/how-to-get-video-editing-clients" || pillarSlugs.has(link.href.replace(/^\/blog\//, ""))))) {
+    fail(`${post.slug} must link to a primary growth pillar.`);
   }
 }
 

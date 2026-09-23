@@ -4,6 +4,7 @@ import { listPublicAgencyListingsFromFile } from "@/lib/gigxomi/agency-listing-s
 import { listFallbackPublishedKnowledgeBaseArticles, listPublishedKnowledgeBaseArticles } from "@/lib/gigxomi/knowledge-base-store";
 import { indexableBlogPosts } from "@/lib/seo/blog-posts";
 import { buildSiteUrl } from "@/lib/seo/company-knowledge-base";
+import { retiredBlogRedirects } from "@/lib/seo/retired-blog-redirects";
 import { listWordPressEditorialPosts } from "@/lib/seo/wordpress-editorial";
 
 export const revalidate = 300;
@@ -30,6 +31,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ),
   );
   const localBlogSlugs = new Set(indexableBlogPosts.map((post) => post.slug));
+  const retiredSlugs = new Set(
+    retiredBlogRedirects.map((redirect) => redirect.source.replace(/^\/blog\//, ""))
+  );
 
   return [
     {
@@ -142,7 +146,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: post.intent === "Transactional" || post.intent === "Commercial" ? 0.78 : 0.7,
     })),
     ...wordpressEditorialPosts
-      .filter((post) => !localBlogSlugs.has(post.slug))
+      .filter((post) => !localBlogSlugs.has(post.slug) && !retiredSlugs.has(post.slug))
       .map((post) => ({
         url: buildSiteUrl(`/blog/${post.slug}`),
         lastModified: new Date(post.modifiedAt),

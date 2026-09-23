@@ -85,6 +85,11 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/services/:path*",
+        destination: "/",
+        permanent: true,
+      },
+      {
         source: "/freelancers/:slug+",
         destination: "/freelancers",
         permanent: true,

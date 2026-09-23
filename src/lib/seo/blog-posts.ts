@@ -44,6 +44,28 @@ export function getBlogSeoTitle(post: BlogPost) {
   return `${(lastSpace >= 36 ? shortened.slice(0, lastSpace) : shortened).replace(/[\s:;,.-]+$/u, "")}…`;
 }
 
+export function getBlogPostHeroImage(post: { slug: string; category?: string }): string {
+  const slug = (post.slug || "").toLowerCase();
+  const category = (post.category || "").toLowerCase();
+
+  if (slug.includes("pricing") || slug.includes("charge") || slug.includes("rates") || slug.includes("retainer")) {
+    return "/images/blog/pricing-calculator-hero.svg";
+  }
+  if (slug.includes("manage") || slug.includes("crm") || slug.includes("onboarding") || slug.includes("revision") || slug.includes("review")) {
+    return "/images/blog/client-management-hero.svg";
+  }
+  if (slug.includes("hire") || slug.includes("outsource") || slug.includes("capacity")) {
+    return "/images/blog/editor-hiring-hero.svg";
+  }
+  if (slug.includes("scale") || slug.includes("start") || slug.includes("growth") || slug.includes("bottleneck") || slug.includes("workflow") || slug.includes("system")) {
+    return "/images/blog/agency-scaling-hero.svg";
+  }
+  if (category.includes("client") || slug.includes("client") || slug.includes("dm") || slug.includes("email") || slug.includes("youtuber") || slug.includes("acquisition")) {
+    return "/images/blog/client-acquisition-hero.svg";
+  }
+  return BLOG_IMAGE;
+}
+
 export function getBlogPost(slug: string) {
   return blogPosts.find((post) => post.slug === slug);
 }

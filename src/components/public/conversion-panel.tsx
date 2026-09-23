@@ -249,7 +249,7 @@ export function IntentConversionPanel() {
             <span className={styles.choiceCta}>
               Create editor profile <ArrowRight size={15} />
             </span>
-          </Link>
+          </a>
         </div>
 
         <p className={styles.footerNote}>

@@ -471,8 +471,8 @@ export const searchLeaderPosts: BlogPost[] = [
         reason: "Set up monthly retainer pricing models that guarantee 60%+ agency margins.",
       },
       {
-        href: "/services/category/social-media-video-editing",
-        label: "Social Media & Reels Video Editing Category",
+        href: "/services/category/short-form-reels-editing",
+        label: "Short-Form, Reels & Shorts Editing Services",
         reason: "Scale high-volume short-form editing retainers with dedicated editors.",
       },
       {

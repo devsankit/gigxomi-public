@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { MarketingSiteShell } from "@/components/public/marketing-site-shell";
-import { blogImage, indexableBlogPosts } from "@/lib/seo/blog-posts";
+import { blogImage, getBlogPostHeroImage, indexableBlogPosts } from "@/lib/seo/blog-posts";
 import { buildSiteUrl, companyKnowledgeBase } from "@/lib/seo/company-knowledge-base";
 import { listWordPressEditorialPosts } from "@/lib/seo/wordpress-editorial";
 
@@ -141,8 +141,18 @@ export default async function BlogPage() {
           <div className="blog-cluster-grid">
             {categories.map((category) => {
               const count = indexableBlogPosts.filter((post) => post.category === category).length;
+              const clusterImage = getBlogPostHeroImage({ slug: "", category });
               return (
                 <a className="blog-cluster-card" href={`#${category.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`} key={category}>
+                  <div style={{ position: "relative", width: "100%", height: "100px", borderRadius: "8px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)", marginBottom: "4px" }}>
+                    <Image
+                      src={clusterImage}
+                      alt={`${category} cluster illustration`}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 20vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                   <span>{count} guides</span>
                   <strong>{category}</strong>
                   <p>
@@ -172,6 +182,15 @@ export default async function BlogPage() {
             <div className="blog-feature-grid">
               {wordpressGrowthGuides.map((post) => (
                 <Link className="blog-feature-card" href={`/blog/${post.slug}`} key={post.id}>
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <Image
+                      src={post.featuredImageUrl || getBlogPostHeroImage(post)}
+                      alt={post.featuredImageAlt || post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                   <span>Updated {new Date(post.modifiedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
                   <strong>{post.title}</strong>
                   <p>{post.excerpt}</p>
@@ -191,6 +210,15 @@ export default async function BlogPage() {
             <div className="blog-feature-grid">
               {wordpressComparisons.map((post) => (
                 <Link className="blog-feature-card" href={`/blog/${post.slug}`} key={post.id}>
+                  <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                    <Image
+                      src={post.featuredImageUrl || getBlogPostHeroImage(post)}
+                      alt={post.featuredImageAlt || post.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      style={{ objectFit: "cover" }}
+                    />
+                  </div>
                   <span>Verified {new Date(post.modifiedAt).toLocaleDateString("en", { day: "numeric", month: "short", year: "numeric" })}</span>
                   <strong>{post.title}</strong>
                   <p>{post.excerpt}</p>
@@ -208,6 +236,15 @@ export default async function BlogPage() {
           <div className="blog-feature-grid">
             {featuredPosts.map((post) => (
               <Link className="blog-feature-card" href={`/blog/${post.slug}`} key={post.slug}>
+                <div style={{ position: "relative", width: "100%", aspectRatio: "16 / 9", borderRadius: "10px", overflow: "hidden", background: "rgba(0,0,0,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                  <Image
+                    src={getBlogPostHeroImage(post)}
+                    alt={post.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
                 <span>{post.intent}</span>
                 <strong>{post.title}</strong>
                 <p>{post.excerpt}</p>

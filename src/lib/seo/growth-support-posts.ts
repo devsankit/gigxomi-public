@@ -1,4 +1,4 @@
-﻿import type { BlogPost } from "@/lib/seo/blog-posts";
+import type { BlogPost } from "@/lib/seo/blog-posts";
 
 type SupportingDraft = Omit<
   BlogPost,
@@ -706,7 +706,7 @@ const drafts: SupportingDraft[] = [
     internalLinks: [
       { href: "/blog/how-to-manage-video-editing-clients", label: "Complete client management guide", reason: "Combines scheduling with briefing, revision management, and client communication systems." },
       { href: "/blog/video-editor-contract-template-for-agencies", label: "Video editor contract template", reason: "Use the contract to enforce the review window and approval clauses from your schedule." },
-      { href: "/services/category/short-form-social-content-editing", label: "Short-Form Social Content Editing", reason: "Deliverables schedules are especially critical for high-frequency short-form output volumes." },
+      { href: "/services/category/short-form-reels-editing", label: "Short-Form, Reels & Shorts Editing Services", reason: "Deliverables schedules are especially critical for high-frequency short-form output volumes." },
       { href: "/pricing", label: "Gigxomi Agency Workspace Plans", reason: "Manage deliverables, revisions, and client approvals inside one agency workspace with 0% commission." },
     ],
     cta: {
@@ -871,9 +871,10 @@ const drafts: SupportingDraft[] = [
       { question: "How do I handle conflicting feedback from multiple stakeholders?", answer: "Direct all feedback through the named approval owner and refuse to act on unsolicited feedback from non-approvers. When multiple stakeholders submit conflicting requests, ask the approval owner to consolidate and prioritise before the editor makes any changes." },
     ],
     internalLinks: [
+      { href: "/blog/how-to-manage-video-editing-clients", label: "Client Management Pillar", reason: "Integrate review workflows into the complete client management and retention operating system." },
       { href: "/blog/multi-editor-revision-management-for-agencies", label: "Multi-editor revision management", reason: "Scale the review and approval process across a distributed team of editors." },
       { href: "/blog/video-editing-client-onboarding-checklist", label: "Client onboarding checklist", reason: "Set review expectations at onboarding to prevent disputes during production." },
-      { href: "/services/category/corporate-and-brand-video-production", label: "Corporate Video Editing", reason: "Corporate clients often involve multiple stakeholders — use the single approval owner structure." },
+      { href: "/services/category/corporate-brand-editing", label: "Corporate & Brand Video Editing Services", reason: "Corporate clients often involve multiple stakeholders — use the single approval owner structure." },
       { href: "/pricing", label: "Gigxomi Agency Workspace Plans", reason: "Manage reviews and revisions inside Gigxomi's Two-Lane workspace with a complete audit trail." },
     ],
     cta: {
@@ -953,7 +954,7 @@ const drafts: SupportingDraft[] = [
     internalLinks: [
       { href: "/blog/video-editing-retainer-pricing-for-agencies", label: "Full retainer pricing guide for agencies", reason: "Deeper coverage of retainer tier structure, negotiation tactics, and contract terms." },
       { href: "/blog/how-to-scale-a-video-editing-business", label: "Scale your video editing business", reason: "Retainer revenue is the financial foundation for systematic agency scaling." },
-      { href: "/services/category/short-form-social-content-editing", label: "Short-Form Social Content Editing", reason: "Recurring social campaigns are the most common retainer format in this niche." },
+      { href: "/services/category/short-form-reels-editing", label: "Short-Form, Reels & Shorts Editing Services", reason: "Recurring social campaigns are the most common retainer format in this niche." },
       { href: "/pricing", label: "Gigxomi Agency Workspace Plans", reason: "Manage recurring campaign workflows and editor assignments inside Gigxomi with 0% commission." },
     ],
     cta: {
@@ -1282,9 +1283,10 @@ const drafts: SupportingDraft[] = [
       { question: "How often should I update the agency style guide?", answer: "Update it whenever a client correction reveals a gap in the current documentation. For active agencies working on multiple concurrent projects, this typically means a minor update every two to four weeks. Schedule a comprehensive review of the full style guide every quarter to ensure it reflects current platform specifications and evolving client preferences." },
     ],
     internalLinks: [
+      { href: "/blog/how-to-manage-video-editing-clients", label: "Client Management Pillar", reason: "Integrate quality control into the master video editing client management operating system." },
       { href: "/blog/multi-editor-revision-management-for-agencies", label: "Multi-editor revision management", reason: "Extends the quality system across a distributed team of multiple editors." },
       { href: "/blog/mastering-client-reviews-and-approvals", label: "Client reviews and approvals guide", reason: "Combines the quality control system with the client approval workflow process." },
-      { href: "/services/category/corporate-and-brand-video-production", label: "Corporate Video Editing", reason: "Corporate clients have the highest quality consistency requirements and benefit most from a full style guide system." },
+      { href: "/services/category/corporate-brand-editing", label: "Corporate & Brand Video Editing Services", reason: "Corporate clients have the highest quality consistency requirements and benefit most from a full style guide system." },
       { href: "/pricing", label: "Gigxomi Agency Workspace Plans", reason: "Manage quality control, editor assignments, and client feedback inside Gigxomi with 0% commission." },
     ],
     cta: {
@@ -1371,6 +1373,7 @@ const drafts: SupportingDraft[] = [
       { question: "What is the single most impactful workflow to implement first?", answer: "The pre-delivery QA checklist gives the fastest and most visible return on investment. Implementing a peer review before every client delivery typically reduces client-reported errors by 60 to 80% within the first month, which directly reduces revision hours and improves client satisfaction and retention." },
     ],
     internalLinks: [
+      { href: "/blog/how-to-scale-a-video-editing-business", label: "Scale Video Editing Agency Pillar", reason: "Standardized workflows are the foundation for scaling from solo editor to full agency." },
       { href: "/blog/5-bottlenecks-in-video-editing-agencies", label: "5 agency bottlenecks and how to fix them", reason: "Maps each common bottleneck directly to the workflow that eliminates it." },
       { href: "/blog/best-practices-for-consistent-video-quality", label: "Consistent quality best practices", reason: "Extends the QA and feedback workflows with additional quality-specific tools and techniques." },
       { href: "/services/category/youtube-long-form-editing", label: "YouTube Long-Form Editing", reason: "Long-form YouTube projects benefit from all ten standardized workflows more than any other format." },

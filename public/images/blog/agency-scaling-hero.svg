@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0F17"/>
+      <stop offset="50%" stop-color="#0A0B14"/>
+      <stop offset="100%" stop-color="#040508"/>
+    </linearGradient>
+    <radialGradient id="purple-glow" cx="80%" cy="30%" r="50%">
+      <stop offset="0%" stop-color="#8B5CF6" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0B0F17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="lime-glow" cx="20%" cy="80%" r="40%">
+      <stop offset="0%" stop-color="#D7FF2F" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0B0F17" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1E293B" stroke-width="0.75" stroke-opacity="0.4"/>
+    </pattern>
+    <linearGradient id="card-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#purple-glow)"/>
+  <rect width="1200" height="630" fill="url(#lime-glow)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+
+  <!-- Brand Watermark & Tag -->
+  <g transform="translate(80, 70)">
+    <rect width="160" height="32" rx="16" fill="#8B5CF6" fill-opacity="0.1" stroke="#8B5CF6" stroke-width="1"/>
+    <text x="80" y="21" fill="#A78BFA" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" text-anchor="middle" letter-spacing="1">AGENCY SCALE SOP</text>
+  </g>
+
+  <!-- Headline -->
+  <text x="80" y="150" fill="#F8FAFC" font-family="system-ui, -apple-system, sans-serif" font-size="46" font-weight="800" letter-spacing="-1.5">AGENCY SCALING</text>
+  <text x="80" y="200" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500">How to Scale From Solo Video Editor to 10+ Client Studio</text>
+
+  <!-- Scaling Pillars Diagram -->
+  <g transform="translate(80, 250)">
+    <!-- Stage 1 -->
+    <rect x="0" y="0" width="240" height="280" rx="12" fill="url(#card-grad)" stroke="#334155" stroke-width="1"/>
+    <text x="20" y="32" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STAGE 1: $1K - $3K/MO</text>
+    <text x="20" y="65" fill="#F1F5F9" font-family="system-ui, sans-serif" font-size="20" font-weight="700">Solo Producer</text>
+    <text x="20" y="95" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Founder does all edits</text>
+    <text x="20" y="118" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Direct client messaging</text>
+    <text x="20" y="141" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Time = Revenue ceiling</text>
+    <text x="20" y="164" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Constant feast-or-famine</text>
+    <rect x="20" y="220" width="200" height="36" rx="8" fill="#64748B" fill-opacity="0.1"/>
+    <text x="120" y="243" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Founder-Trapped</text>
+
+    <!-- Arrow -->
+    <path d="M 250 140 L 265 140" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Stage 2 -->
+    <rect x="275" y="0" width="240" height="280" rx="12" fill="url(#card-grad)" stroke="#334155" stroke-width="1"/>
+    <text x="295" y="32" fill="#A78BFA" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STAGE 2: $3K - $8K/MO</text>
+    <text x="295" y="65" fill="#F1F5F9" font-family="system-ui, sans-serif" font-size="20" font-weight="700">Hybrid Studio</text>
+    <text x="295" y="95" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• First 2 specialist editors</text>
+    <text x="295" y="118" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Style guides codified</text>
+    <text x="295" y="141" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Masked client chats</text>
+    <text x="295" y="164" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Founder shifts to sales</text>
+    <rect x="295" y="220" width="200" height="36" rx="8" fill="#8B5CF6" fill-opacity="0.1"/>
+    <text x="395" y="243" fill="#A78BFA" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Delegation Unlocked</text>
+
+    <!-- Arrow -->
+    <path d="M 525 140 L 540 140" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Stage 3 -->
+    <rect x="550" y="0" width="240" height="280" rx="12" fill="url(#card-grad)" stroke="#8B5CF6" stroke-opacity="0.5" stroke-width="1"/>
+    <text x="570" y="32" fill="#C084FC" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STAGE 3: $8K - $20K/MO</text>
+    <text x="570" y="65" fill="#F1F5F9" font-family="system-ui, sans-serif" font-size="20" font-weight="700">Manager-Led</text>
+    <text x="570" y="95" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Account managers hired</text>
+    <text x="570" y="118" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Kanban stage governance</text>
+    <text x="570" y="141" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• Pre-delivery QA passes</text>
+    <text x="570" y="164" fill="#94A3B8" font-family="system-ui, sans-serif" font-size="13">• 5-8 recurring retainers</text>
+    <rect x="570" y="220" width="200" height="36" rx="8" fill="#8B5CF6" fill-opacity="0.1"/>
+    <text x="670" y="243" fill="#C084FC" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Operational Freedom</text>
+
+    <!-- Arrow -->
+    <path d="M 800 140 L 815 140" stroke="#D7FF2F" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- Stage 4 -->
+    <rect x="825" y="0" width="215" height="280" rx="12" fill="url(#card-grad)" stroke="#D7FF2F" stroke-width="1.5"/>
+    <text x="845" y="32" fill="#D7FF2F" font-family="system-ui, sans-serif" font-size="12" font-weight="700">STAGE 4: $20K+/MO</text>
+    <text x="845" y="65" fill="#F8FAFC" font-family="system-ui, sans-serif" font-size="20" font-weight="700">Scaled Agency</text>
+    <text x="845" y="95" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• 10+ recurring accounts</text>
+    <text x="845" y="118" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• Curated editor roster</text>
+    <text x="845" y="141" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• Zero founder bottleneck</text>
+    <text x="845" y="164" fill="#E2E8F0" font-family="system-ui, sans-serif" font-size="13">• 0% platform fee savings</text>
+    <rect x="845" y="220" width="175" height="36" rx="8" fill="#D7FF2F"/>
+    <text x="932" y="243" fill="#0B0F17" font-family="system-ui, sans-serif" font-size="12" font-weight="800" text-anchor="middle">SYSTEMIZED</text>
+  </g>
+
+  <!-- Bottom Metric Bar -->
+  <g transform="translate(80, 565)">
+    <text x="0" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">GROWTH BLUEPRINT: 2026</text>
+    <text x="350" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">TARGET MARGIN: 65%+</text>
+    <text x="650" y="20" fill="#64748B" font-family="system-ui, sans-serif" font-size="13">COMMISSION CUT: 0% ON GIGXOMI</text>
+    <text x="970" y="20" fill="#D7FF2F" font-family="system-ui, sans-serif" font-size="13" font-weight="700">GIGXOMI.COM</text>
+  </g>
+</svg>

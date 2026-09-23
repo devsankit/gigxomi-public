@@ -1,6 +1,12 @@
 import { unstable_cache } from "next/cache";
 import sanitizeHtml from "sanitize-html";
 
+import { retiredBlogRedirects } from "@/lib/seo/retired-blog-redirects";
+
+const retiredSlugs = new Set(
+  retiredBlogRedirects.map((redirect) => redirect.source.replace(/^\/blog\//, ""))
+);
+
 const WORDPRESS_ORIGIN = "https://blog.gigxomi.com";
 const WORDPRESS_API_BASE = `${WORDPRESS_ORIGIN}/wp-json/wp/v2`;
 const EDITORIAL_CATEGORY_SLUG = "gigxomi-editorial";
@@ -221,6 +227,7 @@ function mapPost(post: WordPressPost, growthGuideCategoryId: number | null): Wor
     post.status !== "publish" ||
     post.content?.protected ||
     !post.slug ||
+    retiredSlugs.has(post.slug) ||
     !title ||
     (hasContentField && !contentHtml) ||
     !publishedAt ||
