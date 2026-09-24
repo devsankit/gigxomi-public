@@ -6,11 +6,15 @@ import {
   BellRing,
   Check,
   CircleHelp,
+  Clock,
   Layers3,
+  Lock,
   MessageCircleMore,
   ShieldCheck,
+  Sparkles,
   UsersRound,
   WalletCards,
+  Zap,
 } from "lucide-react";
 
 import { MarketingSiteShell } from "@/components/public/marketing-site-shell";
@@ -103,7 +107,7 @@ function isFreshPhonePePayment(createdAt: Date) {
 
 function WorkspacePlanCard({
   billingCycle,
-  featured,
+  featured = true,
   isLoggedIn,
   pendingPaymentHref,
   pkg,
@@ -111,7 +115,7 @@ function WorkspacePlanCard({
   salesReferralCode = "",
 }: {
   billingCycle: "MONTHLY" | "YEARLY";
-  featured: boolean;
+  featured?: boolean;
   isLoggedIn: boolean;
   pendingPaymentHref?: string;
   pkg: RegistrationPackage;
@@ -119,80 +123,170 @@ function WorkspacePlanCard({
   salesReferralCode?: string;
 }) {
   const canPostDirectly = isLoggedIn || Boolean(resumeIntentId);
-  const isAgency = pkg.audience === "AGENCY";
-  const isFreemium = Boolean(
-    pkg.slug?.includes("freemium") ||
-    pkg.id.includes("freemium") ||
-    pkg.name?.toLowerCase().includes("freemium") ||
-    pkg.slug?.includes("trial") ||
-    pkg.trialEnabled
-  );
-  const hasTrial = Boolean(pkg.trialEnabled || isFreemium);
   const cycleAmount = billingCycle === "YEARLY" ? (pkg.priceYearly ?? 17700) : (pkg.priceMonthly ?? 2000);
-  const free = !isAgency && (pkg.amount ?? 0) <= 0;
-  const features = getPlanFeatures(pkg);
-  const ctaLabel = hasTrial
-    ? "Start 7-Day Free Trial"
-    : free
-      ? "Start with Freemium"
-      : canPostDirectly
-        ? `Set up PhonePe AutoPay · ₹${Number(cycleAmount ?? 0).toLocaleString("en-IN")}/${billingCycle === "YEARLY" ? "year" : "month"}`
-        : "Register with this plan";
+  const ctaLabel = canPostDirectly
+    ? `Set up PhonePe AutoPay · ₹${Number(cycleAmount ?? 0).toLocaleString("en-IN")}/${billingCycle === "YEARLY" ? "year" : "month"}`
+    : "Start 7-Day Free Trial";
+
+  const corePillars = [
+    {
+      title: "Unified Multi-Channel Inbound",
+      desc: "WhatsApp Business & Instagram Graph integration. Clients message normally — they install zero apps.",
+    },
+    {
+      title: "Anti-Poaching Two-Lane Privacy",
+      desc: "Customer numbers strictly masked. Staff communicate externally only with agency 'Allow Reply' approval.",
+    },
+    {
+      title: "Manager Kanban Delegation",
+      desc: "Inbound → Quotation Sent → In Progress → Review → Delivered boards with private deal margins.",
+    },
+    {
+      title: "Frame-Accurate Review Links",
+      desc: "Branded client video player links with timestamped revision requests and instant delivery sign-off.",
+    },
+    {
+      title: "Curated On-Demand Editor Roster",
+      desc: "Hire screened specialist video editors instantly when client volume exceeds your in-house team.",
+    },
+    {
+      title: "Automated Invoicing & Payouts",
+      desc: "Instant client invoices, PhonePe payment collection gateway, and automated editor earnings tracking.",
+    },
+    {
+      title: "Real-Time Mobile Push Companion",
+      desc: "Native push notifications so your editors and managers catch briefs and revisions immediately.",
+    },
+    {
+      title: "Unlimited Projects & Full Team Access",
+      desc: "Add your full roster of editors and managers with custom permission boundaries and zero per-seat fees.",
+    },
+  ];
 
   return (
-    <article className={featured ? "gx-workspace-plan is-featured" : "gx-workspace-plan"}>
-      <header className="gx-workspace-plan-header">
-        <div>
-          <p>BUSINESS WORKSPACE</p>
-          <h3>{getPublicPlanName(pkg)}</h3>
-          <span>{publicBusinessCopy(pkg.shortSubtitle || pkg.description || "For growing video editing teams")}</span>
+    <article className="gx-workspace-plan is-flagship-showcase">
+      <div className="gx-flagship-glow-top" aria-hidden="true" />
+
+      <header className="gx-flagship-header">
+        <div className="gx-flagship-header-main">
+          <div className="gx-flagship-badge-group">
+            <span className="gx-badge-category">AGENCY WORKSPACE</span>
+            <span className="gx-badge-trial"><Sparkles size={13} /> 7-Day Free Trial · ₹0 Today</span>
+          </div>
+          <h3>Agency Workspace</h3>
+          <p>The complete management software for video editors and video editing agencies.</p>
         </div>
-        {featured ? <em><BadgeCheck size={14} /> Recommended</em> : null}
+        <div className="gx-flagship-pill-tag">
+          <BadgeCheck size={16} />
+          <span>Recommended For Scaling Agencies</span>
+        </div>
       </header>
 
-      <div className="gx-workspace-plan-price">
-        <strong>
-          {isFreemium
-            ? "₹0"
-            : free
-              ? "₹0 forever"
-              : billingCycle === "YEARLY"
-                ? `₹${Number(cycleAmount ?? 17700).toLocaleString("en-IN")}`
-                : `₹${Number(cycleAmount ?? 2000).toLocaleString("en-IN")}`}
-        </strong>
-        <span>
-          {isFreemium
-            ? "7-Day Free Trial (₹0 today) · ₹2,000/mo after trial"
-            : free
-              ? "No subscription fee"
-              : billingCycle === "YEARLY"
-                ? "per year · ₹1,475/month equivalent"
-                : "per month · GST included"}
-        </span>
+      <div className="gx-flagship-body-grid">
+        {/* Left Column: Pricing, Trial, and CTA */}
+        <div className="gx-flagship-left">
+          <div className="gx-flagship-price-box">
+            <div className="gx-flagship-price-display">
+              <span className="gx-flagship-currency">₹</span>
+              <strong className="gx-flagship-amount">
+                {billingCycle === "YEARLY"
+                  ? Number(cycleAmount ?? 17700).toLocaleString("en-IN")
+                  : Number(cycleAmount ?? 2000).toLocaleString("en-IN")}
+              </strong>
+              <span className="gx-flagship-period">
+                /{billingCycle === "YEARLY" ? "year" : "month"}
+              </span>
+            </div>
+
+            <div className="gx-flagship-cycle-tag">
+              {billingCycle === "YEARLY" ? (
+                <span><strong>₹1,475/month</strong> equivalent · Save <strong>25%</strong> (₹6,300/yr)</span>
+              ) : (
+                <span>Billed monthly · <strong>Cancel anytime</strong> · GST included</span>
+              )}
+            </div>
+          </div>
+
+          <div className="gx-flagship-trial-card">
+            <div className="gx-trial-card-header">
+              <Zap size={16} />
+              <strong>Zero-Risk 7-Day Free Trial</strong>
+            </div>
+            <ul>
+              <li><Check size={14} /> Full access to all operations & client messaging tools</li>
+              <li><Check size={14} /> 2 live client projects included with zero charge today</li>
+              <li><Check size={14} /> 1-click cancellation before day 7 with zero hassle</li>
+            </ul>
+          </div>
+
+          <div className="gx-flagship-cta-container">
+            <PricingPlanCta
+              featured={true}
+              ctaLabel={ctaLabel}
+              href={canPostDirectly && pendingPaymentHref ? pendingPaymentHref : buildSignupPackageHref(pkg.id, salesReferralCode)}
+              planId={pkg.id}
+              planName="Agency Workspace"
+              audience="AGENCY"
+              billingCycle={billingCycle}
+              isPendingPayment={Boolean(canPostDirectly && pendingPaymentHref)}
+              canPostDirectly={canPostDirectly && !pendingPaymentHref}
+              resumeIntentId={resumeIntentId}
+              salesReferralCode={salesReferralCode}
+            />
+          </div>
+
+          <div className="gx-flagship-reassurance">
+            <span><Clock size={13} /> 3-Minute Instant Setup</span>
+            <span>·</span>
+            <span><Lock size={13} /> Bank-Grade Privacy</span>
+            <span>·</span>
+            <span><ShieldCheck size={13} /> 100% Satisfaction</span>
+          </div>
+        </div>
+
+        {/* Right Column: Inclusions & Operational Value */}
+        <div className="gx-flagship-right">
+          <p className="gx-flagship-inclusions-label">EVERYTHING INCLUDED IN YOUR WORKSPACE</p>
+          <div className="gx-flagship-features-grid">
+            {corePillars.map((item, idx) => (
+              <div key={idx} className="gx-flagship-feature-item">
+                <div className="gx-feature-icon-wrapper">
+                  <Check size={14} />
+                </div>
+                <div className="gx-feature-text">
+                  <strong>{item.title}</strong>
+                  <p>{item.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="gx-workspace-plan-meta">
-        <span>{hasTrial ? "7-Day Free Trial (₹0 charged today)" : formatBillingType(pkg.billingType)}</span>
-        <span>{billingCycle === "YEARLY" ? "Save ₹6,300 on annual billing" : "Cancel anytime · 2 projects included"}</span>
-      </div>
-
-      <div className="gx-workspace-plan-features">
-        {features.map((feature) => <span key={feature}><Check size={15} /> {feature}</span>)}
-      </div>
-
-      <PricingPlanCta
-        featured={featured}
-        ctaLabel={ctaLabel}
-        href={canPostDirectly && pendingPaymentHref ? pendingPaymentHref : buildSignupPackageHref(pkg.id, salesReferralCode)}
-        planId={pkg.id}
-        planName={getPublicPlanName(pkg)}
-        audience={pkg.audience as "AGENCY" | "FREELANCER"}
-        billingCycle={billingCycle}
-        isPendingPayment={Boolean(canPostDirectly && pendingPaymentHref)}
-        canPostDirectly={canPostDirectly && !pendingPaymentHref}
-        resumeIntentId={resumeIntentId}
-        salesReferralCode={salesReferralCode}
-      />
+      {/* Bottom Trust Strip */}
+      <footer className="gx-flagship-footer-strip">
+        <div className="gx-flagship-trust-pillar">
+          <ShieldCheck size={20} />
+          <div>
+            <strong>Anti-Poaching Protection</strong>
+            <p>Clients see your brand. Editors only see encrypted tokens.</p>
+          </div>
+        </div>
+        <div className="gx-flagship-trust-pillar">
+          <Zap size={20} />
+          <div>
+            <strong>Zero App Install for Clients</strong>
+            <p>Clients chat via WhatsApp & Instagram. You manage in dashboard.</p>
+          </div>
+        </div>
+        <div className="gx-flagship-trust-pillar">
+          <UsersRound size={20} />
+          <div>
+            <strong>1-on-1 Founder Onboarding</strong>
+            <p>Direct WhatsApp support to migrate your current pipeline in minutes.</p>
+          </div>
+        </div>
+      </footer>
     </article>
   );
 }
@@ -203,22 +297,28 @@ const FALLBACK_PRICING_PACKAGES: RegistrationPackage[] = [
     slug: "agency-premium",
     name: "Agency Workspace",
     audience: "AGENCY",
+    priceMonthly: 2000,
+    priceYearly: 17700,
     priceMonthlyInr: 2000,
-    priceYearlyInr: 20000,
-    pricePerAdditionalSeatInr: 500,
-    shortSubtitle: "7-day free trial · 2 projects · ₹0 today",
-    description: "Run multi-channel client inboxes, manager delegation, and editor workflows with zero upfront cost. Test with 2 live projects or for 7 days before subscribing.",
+    priceYearlyInr: 17700,
+    pricePerAdditionalSeatInr: 0,
+    shortSubtitle: "₹2,000/month or ₹17,700/year · 7-day free trial",
+    description: "Run multi-channel client inboxes, manager delegation, editor workflows, reviews, and payouts in one unified operations platform.",
     featureBullets: [
-      "Unified WhatsApp & Instagram client inbox (clients install 0 apps)",
-      "Controlled collaboration lane with manager reply approvals",
-      "Manager Kanban stage boards (Inbound → Review → Delivered)",
-      "Source and assign verified editors (2 active projects in trial)",
-      "Client review links, revisions & delivery approvals",
-      "Invoicing, collections, and financial accounting",
+      "Unified WhatsApp & Instagram client inboxes (clients install 0 apps)",
+      "Anti-Poaching Two-Lane Privacy (client phone numbers strictly masked)",
+      "Manager Kanban pipeline (Inbound → Quotation Sent → In Progress → Review → Delivered)",
+      "Unlimited project routing & manager reply approvals",
+      "Curated on-demand specialist editor capacity roster",
+      "Client review links, versioning, revisions & instant delivery sign-off",
+      "Automated invoicing, PhonePe payment collections, and editor payout ledgers",
+      "Real-time mobile push notifications for editors and managers",
     ],
-    compareHighlights: ["7-day free trial", "2 active projects", "Multi-channel inbox", "Controlled collaboration", "Manager delegation", "Client approvals"],
-    badgeText: "7-Day Free Trial · 2 Projects",
+    compareHighlights: ["7-Day Free Trial", "Anti-Poaching Privacy", "Multi-Channel Inbox", "Manager Kanban", "Review Links", "Payouts Ledger"],
+    badgeText: "Recommended · 7-Day Free Trial",
     showBadge: true,
+    trialEnabled: true,
+    trialDays: 7,
     isRecommended: true,
     sortOrder: 1,
     isActive: true,
@@ -275,7 +375,12 @@ export default async function PricingPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const [session, packages, params] = await Promise.all([getSessionContext(), getResilientRegistrationPackages(), searchParams]);
-  const businessPackages = packages.filter((item) => item.audience === "AGENCY");
+  const agencyPackages = packages.filter((item) => item.audience === "AGENCY");
+  const preferredAgency =
+    agencyPackages.find((pkg) => pkg.slug === "agency-premium" || pkg.id === "pkg-agency-premium") ??
+    agencyPackages.find((pkg) => pkg.isRecommended) ??
+    agencyPackages[0];
+  const businessPackages = preferredAgency ? [preferredAgency] : [];
   const error = getValue(params.error);
   const intentId = getValue(params.intentId);
   const resumeIntent = intentId ? await getPublicAuthIntentById(intentId) : null;
@@ -381,8 +486,8 @@ export default async function PricingPage({
 
         <section className="gx-pricing-plans" id="workspace-plans">
           <div className="gx-pricing-section-heading">
-            <div><p className="gx-eyebrow">Workspace plans</p><h2>Choose the capacity you need now.</h2></div>
-            <p>Start with your own editors and managers. Add screened marketplace editors only when project volume needs extra delivery capacity.</p>
+            <div><p className="gx-eyebrow">Clear Software Pricing</p><h2>One complete plan. Everything your agency needs to scale.</h2></div>
+            <p>Run your video editing business with unified client conversations, manager delegation, anti-poaching privacy, review links, and automated payouts.</p>
           </div>
 
           {visibleError ? <p className="gx-pricing-error">{visibleError}</p> : null}

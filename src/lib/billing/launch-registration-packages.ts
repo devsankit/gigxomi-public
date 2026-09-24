@@ -2,7 +2,7 @@ import type { RegistrationPackage, RegistrationPackageAudience } from "@/lib/gig
 
 const PREFERRED_SLUGS: Record<RegistrationPackageAudience, string[]> = {
   FREELANCER: ["freelancer-pro", "freelancer", "freelancer-starter"],
-  AGENCY: ["agency-freemium", "agency-premium", "agency-launch", "agency", "agency-scale"],
+  AGENCY: ["agency-premium", "pkg-agency-premium", "agency-launch", "agency", "agency-scale", "agency-freemium"],
 };
 
 const LAUNCH_COPY: Record<RegistrationPackageAudience, Pick<RegistrationPackage, "name" | "shortSubtitle" | "description" | "featureBullets" | "compareHighlights">> = {
@@ -21,18 +21,27 @@ const LAUNCH_COPY: Record<RegistrationPackageAudience, Pick<RegistrationPackage,
     compareHighlights: ["₹0 forever", "Public portfolio", "Service marketplace", "Agency opportunities", "Delivery workflow", "Wallet & payouts"],
   },
   AGENCY: {
-    name: "Agency",
-    shortSubtitle: "₹12,000/year — one complete agency workspace",
-    description: "Run leads, editor sourcing, projects, approvals, clients, managers, finance, automation, and analytics for the equivalent of ₹1,000 per month, billed annually.",
+    name: "Agency Workspace",
+    shortSubtitle: "₹2,000/month or ₹17,700/year · 7-day free trial",
+    description: "Run multi-channel client inboxes, manager delegation, editor workflows, reviews, and payouts in one unified operations platform.",
     featureBullets: [
-      "Lead CRM, clients, managers, and agency dashboard",
-      "Find editors, send offers, and manage your Team",
-      "Route projects, review delivery, and collect approvals",
-      "Manage invoices, collections, wallet, and accounting",
-      "Use AI tools, automations, analytics, and integrations",
-      "Customize branding with API, webhooks, and priority support",
+      "Unified WhatsApp & Instagram client inboxes (clients install 0 apps)",
+      "Anti-Poaching Two-Lane Privacy (client phone numbers strictly masked)",
+      "Manager Kanban pipeline (Inbound → Quotation Sent → In Progress → Review → Delivered)",
+      "Unlimited project routing & manager reply approvals",
+      "Curated on-demand specialist editor capacity roster",
+      "Client review links, versioning, revisions & instant delivery sign-off",
+      "Automated invoicing, PhonePe payment collections, and editor payout ledgers",
+      "Real-time mobile push notifications for editors and managers",
     ],
-    compareHighlights: ["₹1,000/month equivalent", "Lead CRM", "Editor Team", "Client approvals", "Finance & analytics", "Branding & integrations"],
+    compareHighlights: [
+      "Unified Multi-Channel Inbox",
+      "Anti-Poaching Two-Lane Privacy",
+      "Manager Delegation Boards",
+      "Client Review Links",
+      "Finance & Invoicing",
+      "Curated Editor Roster",
+    ],
   },
 };
 
@@ -41,7 +50,7 @@ function selectForAudience(packages: RegistrationPackage[], audience: Registrati
     .filter((pkg) => pkg.audience === audience)
     .sort((left, right) => left.sortOrder - right.sortOrder);
   const preferred = PREFERRED_SLUGS[audience]
-    .map((slug) => candidates.find((pkg) => pkg.slug === slug))
+    .map((slug) => candidates.find((pkg) => pkg.slug === slug || pkg.id === slug))
     .find(Boolean);
   const selected = preferred ?? candidates.find((pkg) => pkg.isRecommended) ?? candidates[0];
   if (!selected) return null;
@@ -49,7 +58,13 @@ function selectForAudience(packages: RegistrationPackage[], audience: Registrati
   return {
     ...selected,
     ...LAUNCH_COPY[audience],
-    badgeText: audience === "AGENCY" ? "Best for agencies" : "Free for freelancers",
+    priceMonthly: audience === "AGENCY" ? 2000 : (selected.priceMonthly ?? 0),
+    priceYearly: audience === "AGENCY" ? 17700 : (selected.priceYearly ?? 0),
+    priceMonthlyInr: audience === "AGENCY" ? 2000 : (selected.priceMonthlyInr ?? 0),
+    priceYearlyInr: audience === "AGENCY" ? 17700 : (selected.priceYearlyInr ?? 0),
+    trialEnabled: audience === "AGENCY" ? true : selected.trialEnabled,
+    trialDays: audience === "AGENCY" ? 7 : selected.trialDays,
+    badgeText: audience === "AGENCY" ? "Recommended · 7-Day Free Trial" : "Free for freelancers",
     showBadge: true,
   } satisfies RegistrationPackage;
 }
@@ -58,10 +73,7 @@ export function selectLaunchRegistrationPackages(packages: RegistrationPackage[]
   const selected: RegistrationPackage[] = [];
   const freelancer = selectForAudience(packages, "FREELANCER");
   if (freelancer) selected.push(freelancer);
-  selected.push(
-    ...packages
-      .filter((pkg) => pkg.audience === "AGENCY")
-      .sort((left, right) => left.sortOrder - right.sortOrder),
-  );
+  const agency = selectForAudience(packages, "AGENCY");
+  if (agency) selected.push(agency);
   return selected;
 }
