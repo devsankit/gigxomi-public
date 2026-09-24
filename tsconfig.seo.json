@@ -12,7 +12,6 @@
     "src/app/blog/[slug]/page.tsx",
     "src/app/blog/editorial-methodology/page.tsx",
     "src/app/blog/page.tsx",
-    "src/app/blog/video-editing-project-management-tools/page.tsx",
     "src/components/public/marketing-site-footer.tsx",
     "src/components/public/public-site-footer.tsx",
     "src/lib/seo/blog-posts.ts",

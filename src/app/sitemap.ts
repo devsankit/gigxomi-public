@@ -93,12 +93,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.86,
     },
     {
-      url: buildSiteUrl("/blog/video-editing-project-management-tools"),
-      lastModified: blogLastModified,
-      changeFrequency: "weekly",
-      priority: 0.84,
-    },
-    {
       url: buildSiteUrl("/blog/editorial-methodology"),
       changeFrequency: "monthly",
       priority: 0.58,
