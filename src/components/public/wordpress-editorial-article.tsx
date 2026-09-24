@@ -332,9 +332,28 @@ export function WordPressEditorialArticle({ post, relatedLocalPosts, relatedWord
                 Chat with Concierge (+91 99933 28124)
               </a>
             </div>
-            <p style={{ marginTop: "14px", fontSize: "0.82rem", opacity: 0.85 }}>
-              Are you a freelance editor? <Link href="/freelancers" style={{ color: "var(--accent, #D7FF2F)", textDecoration: "underline" }}>Join agency projects & keep 100% earnings (Free Forever)</Link>
-            </p>
+            <div style={{ marginTop: "18px", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap", fontSize: "0.88rem", color: "rgba(255, 255, 255, 0.85)" }}>
+              <span>Are you a freelance editor?</span>
+              <Link
+                className="blog-freelance-button"
+                href="/freelancers"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  padding: "7px 15px",
+                  borderRadius: "20px",
+                  background: "#D7FF2F",
+                  color: "#08110D",
+                  fontWeight: 700,
+                  fontSize: "0.82rem",
+                  textDecoration: "none",
+                  lineHeight: 1.2,
+                  boxShadow: "0 2px 8px rgba(215, 255, 47, 0.25)",
+                }}
+              >
+                Join agency projects &amp; keep 100% earnings (Free Forever) →
+              </Link>
+            </div>
           </section>
 
           {relatedWordPressPosts.length || relatedLocalPosts.length ? (

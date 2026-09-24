@@ -194,6 +194,17 @@
   background: #d7ff2f;
 }
 
+.gx-blog-page .blog-cta-panel .blog-freelance-button {
+  display: inline-flex !important;
+  min-height: auto !important;
+  border-radius: 20px !important;
+  color: #08110d !important;
+  background: #d7ff2f !important;
+  font-weight: 700 !important;
+  padding: 7px 15px !important;
+  text-decoration: none !important;
+}
+
 .gx-blog-page .blog-secondary-link {
   border-color: var(--gx-page-line-strong);
   border-radius: 14px;
